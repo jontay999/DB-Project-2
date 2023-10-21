@@ -13,3 +13,13 @@ pip3 install -r requirements.txt
 cd src/
 python3 project.py
 ```
+
+## Python Setup
+
+- To ensure no versioning issues, we use `venv`
+
+```bash
+python3 -m install virtualenv
+py -3 -m venv venv
+
+```
