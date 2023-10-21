@@ -23,3 +23,13 @@ python3 -m install virtualenv
 py -3 -m venv venv
 
 ```
+
+### More setup instructions
+
+#### MAC OSX
+
+Install Postgres
+
+```
+brew install postgresql
+```
