@@ -1,3 +1,9 @@
 TPC*/
 .DS_Store
 */.DS_Store
+
+
+db_proj/*
+
+*.env*
+*/.env*
