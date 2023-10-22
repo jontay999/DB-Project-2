@@ -14,6 +14,11 @@ cd src/
 python3 project.py
 ```
 
+### Architecture
+
+- PyQT: GUI
+- Postgres
+
 ## Python Setup
 
 - To ensure no versioning issues, we use a python virtual environment
