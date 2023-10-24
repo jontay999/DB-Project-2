@@ -9,6 +9,16 @@ DATABASE_NAME = "tpc_h"
 # for use before the TCP-H db exists
 STARTING_DATABASE_NAME = "postgres"
 
+def load_queries():
+    QUERY_FOLDER = './data/queries/'
+    queries = []
+    for filename in os.listdir(QUERY_FOLDER):
+        file_path = os.path.join(QUERY_FOLDER, filename)
+        if not os.path.isfile(file_path): continue
+        with open(file_path, "r") as f:
+            query = f.read()
+            queries.append(query)
+    return queries
 
 class Database:
     # Maintain singleton design pattern with static variable
@@ -59,7 +69,8 @@ class Database:
 
     def create_tables(self, base_db_name, new_db_name):
         self.connect(base_db_name, False)
-        self.execute(f"DROP DATABASE IF EXISTS {new_db_name};", False)
+        
+        # self.execute(f"DROP DATABASE IF EXISTS {new_db_name};", False)
         self.execute(f"CREATE DATABASE {new_db_name};", False)
         self.execute("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user")
         print(f"Created database: {new_db_name}")
@@ -74,13 +85,29 @@ class Database:
             print(f"{file} has been created")
         print("All tables created")
         self.close()
-    
-    
+
+
+
+
+
+def parse_explain(explain_rows):
+    explain_rows = [row[0] for row in explain_rows]
+    stack = []
+    for row in explain_rows:
+        indent = len(row) - len()
+
 
 
 if __name__ == "__main__":
-    print("Running db.py! ONLY DO THIS WHEN YOU ARE CREATING TABLE")
+    print("Running db.py!")
+    all_queries = load_queries()
     db = Database()
-    db.create_tables(STARTING_DATABASE_NAME, DATABASE_NAME)
+    db.connect('tpc_h')
+    result = db.execute("EXPLAIN " + all_queries[0])
+    breakpoint()
+    print(result)
+    db.close()
+
+    # db.create_tables(STARTING_DATABASE_NAME, DATABASE_NAME)
 
 
