@@ -1,6 +1,7 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
+from db_util import parse_explain
 
 TABLE_FOLDER = "./sql_setup/"
 TABLE_FILES = ["region.sql", "nation.sql", "part.sql", "supplier.sql", "partsupp.sql", "customer.sql", "order.sql", "lineitem.sql"]
@@ -90,13 +91,6 @@ class Database:
 
 
 
-def parse_explain(explain_rows):
-    explain_rows = [row[0] for row in explain_rows]
-    stack = []
-    for row in explain_rows:
-        indent = len(row) - len()
-
-
 
 if __name__ == "__main__":
     print("Running db.py!")
@@ -104,7 +98,6 @@ if __name__ == "__main__":
     db = Database()
     db.connect('tpc_h')
     result = db.execute("EXPLAIN " + all_queries[0])
-    breakpoint()
     print(result)
     db.close()
 
