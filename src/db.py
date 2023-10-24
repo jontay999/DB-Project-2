@@ -97,8 +97,12 @@ if __name__ == "__main__":
     all_queries = load_queries()
     db = Database()
     db.connect('tpc_h')
-    result = db.execute("EXPLAIN " + all_queries[0])
-    print(result)
+    for query in all_queries:
+        result = db.execute("EXPLAIN " + query)
+        parsed_nodes = parse_explain(result)
+        for n in parsed_nodes:
+            print(n)
+        breakpoint()
     db.close()
 
     # db.create_tables(STARTING_DATABASE_NAME, DATABASE_NAME)

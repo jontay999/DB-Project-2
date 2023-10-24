@@ -50,7 +50,7 @@ def parse_explain(explain_rows):
         if has_arrow or indent == 0:
             node = Node(node_id, row.lstrip())
 
-            while stack and indent - 6 != stack[-1][0]:
+            while stack and (stack[-1][0] != 0 and indent - 6 != stack[-1][0]):
                 stack.pop()
             
             if stack:  stack[-1][1].add_child(node_id)
@@ -59,6 +59,11 @@ def parse_explain(explain_rows):
         else:
             assert len(stack) > 0, "Something went wrong!"
             stack[-1][1].add_secondary_content(row)
+        print(row)
+    print()
     return all_nodes
 
-all_nodes = parse_explain(EXAMPLE_RESULT)
+if __name__ == "__main__":
+    all_nodes = parse_explain(EXAMPLE_RESULT)
+    for n in all_nodes:
+        print(n)
