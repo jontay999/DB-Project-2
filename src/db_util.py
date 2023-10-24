@@ -59,11 +59,11 @@ def parse_explain(explain_rows):
         else:
             assert len(stack) > 0, "Something went wrong!"
             stack[-1][1].add_secondary_content(row)
-        print(row)
-    print()
+
     return all_nodes
 
 if __name__ == "__main__":
+    print("Runing db_util!!")
     all_nodes = parse_explain(EXAMPLE_RESULT)
     for n in all_nodes:
         print(n)

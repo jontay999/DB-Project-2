@@ -9,5 +9,4 @@ db_proj/*
 */.env*
 
 */__pycache__/*
-
 /__pycache/*

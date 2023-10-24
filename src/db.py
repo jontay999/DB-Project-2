@@ -100,9 +100,7 @@ if __name__ == "__main__":
     for query in all_queries:
         result = db.execute("EXPLAIN " + query)
         parsed_nodes = parse_explain(result)
-        for n in parsed_nodes:
-            print(n)
-        breakpoint()
+        # do stuff with the parsed nodes
     db.close()
 
     # db.create_tables(STARTING_DATABASE_NAME, DATABASE_NAME)
