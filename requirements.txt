@@ -1,3 +1,4 @@
 psycopg2-binary
 python-dotenv
 pyqt6
+pyqt6-tools

@@ -100,6 +100,7 @@ if __name__ == "__main__":
     for query in all_queries:
         result = db.execute("EXPLAIN " + query)
         parsed_nodes = parse_explain(result)
+        breakpoint()
         # do stuff with the parsed nodes
     db.close()
 
