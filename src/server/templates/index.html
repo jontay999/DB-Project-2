@@ -1,18 +1,35 @@
 {% extends 'layout.html' %} {% block body %}
 <div class="jumbotron">
-  <h1 class="display-4">
-    Bootstrap starter template by {{ app_data['author'] }}
-  </h1>
+  <h1 class="display-4">Query Execution Plan Visualization</h1>
   <p class="lead">
-    This is a simple hero unit, a simple jumbotron-style component for calling
-    extra attention to featured content or information.
+    Instructions:
+    <ol>
+      <li>Type in your SQL Query in the textbox</li>
+      <li>Generate the QEP Graph on the right hand side</li>
+      <li>Click in on each node to find out more information about each node</li>
+    </ol>
   </p>
-  <p>Title: {{ app_data['html_title'] }}</p>
-
   <hr class="my-4" />
-  <p>
-    It uses utility classes for typography and spacing to space content out
-    within the larger container.
-  </p>
+  <div class="container-fluid">
+    <div class="row border">
+        <div class="col-md-6">
+            <!-- Left Section - Split into 2 Equal Width Sections -->
+            <div class="row d-flex flex-column">
+                <div class="col-md-6 border w-100">
+                  SQL Textbox go here
+                    <!-- Left Subsection 1 Content -->
+                </div>
+                <div class="col-md-6 border w-100">
+                  Explore node content goes here
+                    <!-- Left Subsection 2 Content -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 border">
+            <!-- Right Section Content - Spans the Whole Width of Left Section -->
+            Right section for graph visualizer
+        </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
