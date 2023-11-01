@@ -11,16 +11,37 @@ class Node:
         content = content.strip()[:-1]
         content = content.split('->')[-1]
         title, content = content.split('(')
-        self.title = title.strip()
+        if " on " in title:
+            table = title.split(" on ")[-1].strip()
+            self.table = " as ".join(table.split(" "))
+            self.title = title.split(" on ")[0].strip()
+        else:
+            self.title = title.strip()
+            self.table = None
         content = content.strip()
         _, cost_range, rows, width = content.split('=')
         cost_range = cost_range.split(' ')[0].split('..')
         self.cost = (float(cost_range[0]), float(cost_range[1]))
         self.rows = int(rows.split(' ')[0])
         self.width = int(width.split(' ')[0])
+
+    def parse_secondary_content(self, content):
+        headers = ["Group Key:","Sort Key:","Filter:","Hash Cond:","Index Cond:"]
+        to_remove = ["::numeric","::bpchar","::date"]
+        content = content.lstrip()
+        for remove in to_remove:
+            content = content.replace(remove,"")
+        for header in headers:
+            if header in content:
+                content = content.split(header)[-1].strip()
+                if content[0]=='(' and content[-1]==')':
+                    content = content[1:-1]
+                return content
+        return content
     
     def add_secondary_content(self, content):
-        self.secondary_content.append(content.lstrip())
+        content = self.parse_secondary_content(content)
+        self.secondary_content.append(content)
     
     def add_child(self, node_id):
         self.children.append(node_id)
@@ -29,7 +50,9 @@ class Node:
         if verbose:
             return f'''Node {self.id}, title: {self.title}
                 children: {self.children}
-                cost: {self.cost}, rows: {self.rows}, width: {self.width}'''
+                cost: {self.cost}, rows: {self.rows}, width: {self.width}
+                content: {self.secondary_content}
+                table: {self.table}'''
         return f'Node {self.id}, title: {self.title}, children: {self.children}'
     
     def __repr__(self):
@@ -67,3 +90,4 @@ if __name__ == "__main__":
     all_nodes = parse_explain(EXAMPLE_RESULT)
     for n in all_nodes:
         print(n)
+ 
