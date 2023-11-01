@@ -25,6 +25,7 @@ sqlForm.addEventListener("submit", async (e) => {
             // document.getElementById("queryOutput").textContent = JSON.stringify(data, undefined, 2);
 
             update_root(data['result']);
+            openModal("Syntax Error!", JSON.stringify(data, undefined, 2));
         } else {
             alert("sql query failed!")
             // dhruval put your modal here
