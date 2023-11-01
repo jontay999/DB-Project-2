@@ -1,3 +1,4 @@
+from pprint import pprint
 EXAMPLE_RESULT = [('Sort  (cost=617704.60..620739.96 rows=1214145 width=44)',), ("  Sort Key: (sum((lineitem.l_extendedprice * ('1'::numeric - lineitem.l_discount)))) DESC, orders.o_orderdate",), ('  ->  Finalize GroupAggregate  (cost=260515.66..420302.08 rows=1214145 width=44)',), ('        Group Key: lineitem.l_orderkey, orders.o_orderdate, orders.o_shippriority',), ('        ->  Gather Merge  (cost=260515.66..392477.92 rows=1011788 width=44)',), ('              Workers Planned: 2',), ('              ->  Partial GroupAggregate  (cost=259515.64..274692.46 rows=505894 width=44)',), ('                    Group Key: lineitem.l_orderkey, orders.o_orderdate, orders.o_shippriority',), ('                    ->  Sort  (cost=259515.64..260780.37 rows=505894 width=24)',), ('                          Sort Key: lineitem.l_orderkey, orders.o_orderdate, orders.o_shippriority',), ('                          ->  Nested Loop  (cost=4524.78..201208.53 rows=505894 width=24)',), ('                                ->  Parallel Hash Join  (cost=4524.35..40072.36 rows=126467 width=12)',), ('                                      Hash Cond: (orders.o_custkey = customer.c_custkey)',), ('                                      ->  Parallel Seq Scan on orders  (cost=0.00..33907.50 rows=624938 width=16)',), ("                                            Filter: (o_totalprice > '10'::numeric)",), ('                                      ->  Parallel Hash  (cost=4366.25..4366.25 rows=12648 width=4)',), ('                                            ->  Parallel Seq Scan on customer  (cost=0.00..4366.25 rows=12648 width=4)',), ("                                                  Filter: (c_mktsegment = 'BUILDING'::bpchar)",), ('                                ->  Index Scan using lineitem_pkey on lineitem  (cost=0.43..1.11 rows=16 width=16)',), ('                                      Index Cond: (l_orderkey = orders.o_orderkey)',), ("                                      Filter: (l_extendedprice > '10'::numeric)",)]
 
 class Node:
@@ -58,6 +59,20 @@ class Node:
     def __repr__(self):
         return self.__str__(False)
 
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "children": self.children,
+            "cost": self.cost,
+            "rows": self.rows,
+            "title": self.title,
+            "width": self.width,
+            "secondary_content": self.secondary_content,
+            "table": self.table,
+        }
+
+
 def parse_explain(explain_rows):
     explain_rows = [row[0] for row in explain_rows]
     stack = []
@@ -89,5 +104,5 @@ if __name__ == "__main__":
     print("Runing db_util!!")
     all_nodes = parse_explain(EXAMPLE_RESULT)
     for n in all_nodes:
-        print(n)
+        pprint(n.to_json())
  

@@ -1,8 +1,12 @@
 const sqlForm = document.getElementById("sqlForm");
 sqlForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("I am here;")
-    const jsonData = { sql_query: document.getElementById("sql_query").value };
+    const inputValue = document.getElementById("sql_query").value;
+    if (inputValue.includes("EXPLAIN")) {
+        alert("Do  not include explain in the query");
+        return;
+    }
+    const jsonData = { sql_query: inputValue };
     try {
 
         const response = await fetch("/query", {

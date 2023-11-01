@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify,request
 from db import Database
+from db_util import parse_explain
 
 DEVELOPMENT_ENV = True
 app = Flask(__name__)
@@ -23,13 +24,13 @@ def index():
 @app.route("/query", methods=['POST'])
 def run_sql_query():
     try:
-        # Get the SQL query from the POST request
-        print("json:", request.get_json())
         sql_query = request.get_json().get('sql_query')
         print("got the sql query:", sql_query);
         if sql_query:
-            result = DATABASE.execute(sql_query, True)
-            return jsonify({'result': result})
+            result = DATABASE.execute("EXPLAIN " + sql_query, True)
+            parsed_nodes = parse_explain(result)
+
+            return jsonify({'result': parsed_nodes})
         else:
             return jsonify({'error': 'No SQL query provided in the request'})
     except Exception as e:
