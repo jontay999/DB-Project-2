@@ -51,31 +51,3 @@ canvas:active {
 #sample_queries li:hover {
   text-decoration: underline;
 }
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: #fff;
-  width: 50%;
-  padding: 20px;
-  border-radius: 5px;
-
-  #close-modal {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 30px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-}
