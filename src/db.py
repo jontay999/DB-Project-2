@@ -49,6 +49,7 @@ class Database:
             port=self.db_port
         )
         connection.set_session(readonly=read_only, autocommit=True)
+        print("Connected to:", table_name);
         self.connection = connection
 
     def execute(self, query, needs_output=True):
