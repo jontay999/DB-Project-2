@@ -17,7 +17,7 @@ sqlForm.addEventListener("submit", async (e) => {
             },
         });
         if (response.ok) {
-            const data = await response.json();
+            let data = await response.json();
 
             console.log("got data:", data)
             document.getElementById("queryOutput").textContent = JSON.stringify(data, undefined, 2);
