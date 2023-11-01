@@ -16,7 +16,15 @@
             <!-- Left Section - Split into 2 Equal Width Sections -->
             <div class="row d-flex flex-column">
                 <div class="col-md-6 border w-100" style="height:50%">
-                  SQL Textbox go here
+                  <form id="sqlForm">
+                    <div class="form-group my-4">
+                      <label for="sqlInput" style="font-weight:bold" class="mb-2">SQL Input</label>
+                      <textarea class="form-control" id="sqlInput" rows="3" placeholder="SELECT * FROM NATION;" required></textarea>
+                    </div>
+                    <div class="d-flex mb-3 flex-row-reverse">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                  </form>
                     <!-- Left Subsection 1 Content -->
                 </div>
                 <div class="col-md-6 border w-100" style="height: 50%">
