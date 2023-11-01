@@ -7,7 +7,7 @@ const margin = {
     width = 960 - margin.right - margin.left,
     height = 800 - margin.top - margin.bottom;
 
-const root = {
+let root = {
     children: [
         {
             children: [
@@ -162,6 +162,8 @@ const svg = d3
 //necessary so that zoom knows where to zoom and unzoom from
 zm.translate([350, 20]);
 
+
+
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
@@ -170,20 +172,26 @@ function collapse(d) {
     }
 }
 
+root.children.forEach(collapse);
+root.x0 = 0;
+root.y0 = height / 2;
+update(root);
 
-function drawRoot(rootData) {
-    rootData.x0 = 0;
-    rootData.y0 = height / 2;
-    rootData.children.forEach(collapse);
-    console.log('root data:', rootData)
-    update(rootData);
+
+function update_root(new_root) {
+    root = new_root;
+    root.children.forEach(collapse);
+    root.x0 = 0;
+    root.y0 = height / 2;
+    update(root);
 }
+
 
 d3.select("#body").style("height", "800px");
 
-function update(source, rootData) {
+function update(source) {
     // Compute the new tree layout.
-    const nodes = tree.nodes(rootData).reverse(),
+    const nodes = tree.nodes(root).reverse(),
         links = tree.links(nodes);
 
     // Normalize for fixed-depth.
