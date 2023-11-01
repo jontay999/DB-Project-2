@@ -15,7 +15,30 @@ canvas:active {
   position: absolute;
   top: 5px;
   left: 5px;
+  right: 5px;
+  bottom: 5px;
   font-family: arial;
   font-size: 16px;
-  background: #fffd;
+  cursor: grab;
+}
+
+#canvas-div:active {
+  cursor: grabbing;
+}
+
+.node {
+  cursor: pointer;
+}
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.node text {
+  font: 10px sans-serif;
+}
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
 }
