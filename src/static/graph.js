@@ -1,5 +1,5 @@
 const ctx = canvas.getContext("2d");
-requestAnimationFrame(update);
+// requestAnimationFrame(update);
 const mouse = { x: 0, y: 0, button: false, wheel: 0, lastX: 0, lastY: 0, drag: false };
 const gridLimit = 64;  // max grid lines for static grid
 const gridSize = 128;  // grid size in screen pixels for adaptive and world pixels for static
@@ -19,12 +19,12 @@ function mouseEvents(e) {
     }
 }
 ["mousedown", "mouseup", "mousemove"].forEach(name => document.addEventListener(name, mouseEvents));
-document.addEventListener("wheel", mouseEvents, { passive: false });
+// document.addEventListener("wheel", mouseEvents, { passive: false });
 
 const panZoom = {
     x: 0,
     y: 0,
-    scale: 1,
+    scale: 1 / 5,
     maxScale: 1,
     minScale: 1 / 5,
     apply() { ctx.setTransform(this.scale, 0, 0, this.scale, this.x, this.y) },
@@ -101,6 +101,9 @@ function update() {
     } else {
         ctx.clearRect(0, 0, w, h);
     }
+
+    drawTree(tree)
+
     if (mouse.wheel !== 0) {
         let scale = 1;
         scale = mouse.wheel < 0 ? 1 / scaleRate : scaleRate;
@@ -127,5 +130,90 @@ function update() {
     // drawGrid(gridSize, adaptiveGridCb.checked);
     drawGrid(gridSize, false);
     // drawPoint(mouse.x, mouse.y);
+
     requestAnimationFrame(update);
 }
+
+canvas.addEventListener("click", function (event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Get the current transformation matrix of the canvas
+    const transform = ctx.getTransform();
+
+    // Apply the transformation to the coordinates
+    const absoluteX = (x - transform.e) / transform.a;
+    const absoluteY = (y - transform.f) / transform.d;
+
+    console.log(`Clicked at (${absoluteX}, ${absoluteY})`);
+});
+
+const flextree = d3.flextree;
+const layout = flextree();
+const tree = layout.hierarchy({
+    size: [1, 1],
+    children: [
+        { size: [2, 4] },
+        {
+            size: [3, 1],
+            children: [
+                { size: [4, 1] },
+            ],
+        },
+    ],
+});
+
+function drawTree(node) {
+    console.log("Drawing node:", node)
+    // x,y,width, height
+    ctx.fillStyle = 'red'
+    ctx.fillRect(node.x * 50, node.y * 50, node.data.size[0] * 50 - 10, node.data.size[1] * 50 - 10);
+    if (node.children) {
+        node.children.forEach(child => drawTree(child));
+    }
+}
+// function drawTree(node) {
+
+//     // Get the current transformation matrix
+//     const transform = ctx.getTransform();
+
+//     // Invert the transformation matrix
+//     const inverseTransform = new DOMMatrix();
+//     if (transform.isInvertible) {
+//         inverseTransform = transform.inverse();
+//     }
+
+//     // Create a new path
+//     ctx.beginPath();
+
+//     // Apply the inverted transformation matrix to the coordinates
+//     const x = node.x * 50;
+//     const y = node.y * 50;
+//     const width = node.data.size[0] * 50 - 10;
+//     const height = node.data.size[1] * 50 - 10;
+
+//     const staticX = x * inverseTransform.a + y * inverseTransform.c + inverseTransform.e;
+//     const staticY = x * inverseTransform.b + y * inverseTransform.d + inverseTransform.f;
+//     const staticWidth = width * inverseTransform.a + height * inverseTransform.c;
+//     const staticHeight = width * inverseTransform.b + height * inverseTransform.d;
+
+//     // Set the fill style
+//     ctx.fillStyle = 'red';
+
+//     // Draw the rectangle at its static position
+//     ctx.fillRect(staticX, staticY, staticWidth, staticHeight);
+
+//     // Close the path
+//     ctx.closePath();
+
+//     if (node.children) {
+//         node.children.forEach(child => drawTree(child));
+//     }
+// }
+
+
+layout(tree);
+drawGrid(gridSize, false);
+drawTree(tree);
+// tree.each(node => console.log(`(${node.x}, ${node.y})`));

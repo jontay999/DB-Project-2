@@ -100,9 +100,24 @@ def parse_explain(explain_rows):
 
     return all_nodes
 
+def tree_representation(all_nodes):
+    d = all_nodes[0].to_json()
+    def dfs(curr_d):
+        children_rep = []
+        for child in curr_d["children"]:
+            next_d = all_nodes[child].to_json()
+            result = dfs(next_d)
+            children_rep.append(result)
+        curr_d["children"] = children_rep
+        return curr_d
+    return dfs(d)
+
+
 if __name__ == "__main__":
     print("Runing db_util!!")
+    # note that first item will always be the root
     all_nodes = parse_explain(EXAMPLE_RESULT)
-    for n in all_nodes:
-        pprint(n.to_json())
+    res = tree_representation(all_nodes)
+    # for n in all_nodes:
+    #     pprint(n.to_json())
  
