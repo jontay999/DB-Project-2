@@ -21,6 +21,7 @@ sqlForm.addEventListener("submit", async (e) => {
 
             console.log("got data:", data)
             document.getElementById("queryOutput").textContent = JSON.stringify(data, undefined, 2);
+            drawRoot(data['result'])
         } else {
             alert("sql query failed!")
             // dhruval put your modal here

@@ -162,9 +162,6 @@ const svg = d3
 //necessary so that zoom knows where to zoom and unzoom from
 zm.translate([350, 20]);
 
-root.x0 = 0;
-root.y0 = height / 2;
-
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
@@ -173,14 +170,20 @@ function collapse(d) {
     }
 }
 
-root.children.forEach(collapse);
-update(root);
+
+function drawRoot(rootData) {
+    rootData.x0 = 0;
+    rootData.y0 = height / 2;
+    rootData.children.forEach(collapse);
+    console.log('root data:', rootData)
+    update(rootData);
+}
 
 d3.select("#body").style("height", "800px");
 
-function update(source) {
+function update(source, rootData) {
     // Compute the new tree layout.
-    const nodes = tree.nodes(root).reverse(),
+    const nodes = tree.nodes(rootData).reverse(),
         links = tree.links(nodes);
 
     // Normalize for fixed-depth.
