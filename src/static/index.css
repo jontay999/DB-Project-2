@@ -42,3 +42,12 @@ canvas:active {
   stroke: #ccc;
   stroke-width: 1.5px;
 }
+
+#sample_queries li {
+  color: #0d6efd;
+  cursor: pointer;
+}
+
+#sample_queries li:hover {
+  text-decoration: underline;
+}

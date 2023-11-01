@@ -172,15 +172,15 @@ function collapse(d) {
     }
 }
 
-root.children.forEach(collapse);
-root.x0 = 0;
-root.y0 = height / 2;
-update(root);
+// root.children.forEach(collapse);
+// root.x0 = 0;
+// root.y0 = height / 2;
+// update(root);
 
 
 function update_root(new_root) {
     root = new_root;
-    root.children.forEach(collapse);
+    // root.children.forEach(collapse);
     root.x0 = 0;
     root.y0 = height / 2;
     update(root);
