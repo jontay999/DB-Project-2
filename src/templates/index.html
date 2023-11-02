@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
         </div>
       </div>
     </div>
@@ -111,7 +111,7 @@
   const sample_queries = document.getElementById("sample_queries");
   for(let i = 0;i<sample_queries.children.length;i++){
     sample_queries.children[i].addEventListener('click', () => {
-      document.getElementById('sql_query').textContent = queries[i];
+      document.getElementById('sql_query').value = queries[i];
     })
   }
 

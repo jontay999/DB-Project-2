@@ -142,8 +142,8 @@ let root = {
 };
 
 const duration = 750,
-    rectW = 60 * 2 * 2,
-    rectH = 30 * 2;
+    rectW = 60 * 2 * 2 + 20,
+    rectH = 30 * 2 + 5;
 
 const tree = d3.layout.tree().nodeSize([70, 40]);
 const diagonal = d3.svg.diagonal().projection(function (d) {
@@ -228,8 +228,6 @@ function update(source) {
             return d._children ? "lightsteelblue" : "#fff";
         });
 
-    // draw the elem inside the rectangle
-
     nodeEnter
         .append("foreignObject")
         .attr("width", rectW)
@@ -237,26 +235,14 @@ function update(source) {
         .append("xhtml:div")
         .style("height", "100%")
         .html(function (d) {
-            console.log("got d:", d)
             // Create a custom HTML structure with two spans
             return `
             <div style='height:100%;width:100%;margin:auto;display:flex;justify-content:space-between; padding: 10px 15px;'>
-                <span class="custom-class1">${d.title}</span>
-                <span class="custom-class2">#${parseInt(d.id) + 1}</span>
+                <span><b>${d.title}</b></span>
+                <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
             </div>
         `;
         });
-
-    // this is if i just had a text element inside
-    // nodeEnter
-    //     .append("text")
-    //     .attr("x", rectW / 2)
-    //     .attr("y", rectH / 2)
-    //     .attr("dy", ".35em")
-    //     .attr("text-anchor", "middle")
-    //     .text(function (d) {
-    //         return d.title;
-    //     });
 
     // Transition nodes to their new position.
     const nodeUpdate = node

@@ -18,7 +18,9 @@ sqlForm.addEventListener("submit", async (e) => {
         });
         if (response.ok) {
             let data = await response.json();
-            // openModal("Results", JSON.stringify(data, undefined, 2));
+            if (data.error) {
+                openModal("Error", JSON.stringify(data, undefined, 2));
+            }
 
             console.log("got data:", data)
 
