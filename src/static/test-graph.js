@@ -164,13 +164,13 @@ zm.translate([350, 20]);
 
 
 
-function collapse(d) {
-    if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapse);
-        d.children = null;
-    }
-}
+// function collapse(d) {
+//     if (d.children) {
+//         d._children = d.children;
+//         d._children.forEach(collapse);
+//         d.children = null;
+//     }
+// }
 
 
 function update_root(new_root) {
@@ -213,25 +213,50 @@ function update(source) {
         })
         .on("click", clickNode);
 
+
+    // draw the rectangle
     nodeEnter
         .append("rect")
         .attr("width", rectW)
         .attr("height", rectH)
         .attr("stroke", "black")
         .attr("stroke-width", 1)
+        .attr("stroke-opacity", 0.2)
+        .attr("rx", 4)
+        .attr("ry", 4)
         .style("fill", function (d) {
             return d._children ? "lightsteelblue" : "#fff";
         });
 
+    // draw the elem inside the rectangle
+
     nodeEnter
-        .append("text")
-        .attr("x", rectW / 2)
-        .attr("y", rectH / 2)
-        .attr("dy", ".35em")
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return d.title;
+        .append("foreignObject")
+        .attr("width", rectW)
+        .attr("height", rectH)
+        .append("xhtml:div")
+        .style("height", "100%")
+        .html(function (d) {
+            console.log("got d:", d)
+            // Create a custom HTML structure with two spans
+            return `
+            <div style='height:100%;width:100%;margin:auto;display:flex;justify-content:space-between; padding: 10px 15px;'>
+                <span class="custom-class1">${d.title}</span>
+                <span class="custom-class2">#${parseInt(d.id) + 1}</span>
+            </div>
+        `;
         });
+
+    // this is if i just had a text element inside
+    // nodeEnter
+    //     .append("text")
+    //     .attr("x", rectW / 2)
+    //     .attr("y", rectH / 2)
+    //     .attr("dy", ".35em")
+    //     .attr("text-anchor", "middle")
+    //     .text(function (d) {
+    //         return d.title;
+    //     });
 
     // Transition nodes to their new position.
     const nodeUpdate = node
@@ -326,15 +351,12 @@ function update(source) {
 
 // Toggle children on click.
 function clickNode(d) {
-    if (d.children) {
-        d._children = d.children;
-        d.children = null;
-    } else {
-        d.children = d._children;
-        d._children = null;
-    }
-    update(d);
+    updateNodeInfo(d)
+    // console.log("clicked on d:", d)
+    return;
 }
+
+
 
 //Redraw for zoom
 function redraw() {
@@ -348,3 +370,5 @@ function redraw() {
         ")"
     );
 }
+
+update_root(root)

@@ -35,7 +35,7 @@ canvas:active {
   stroke-width: 1.5px;
 }
 .node text {
-  font: 10px sans-serif;
+  font: 15px sans-serif;
 }
 .link {
   fill: none;
@@ -50,4 +50,12 @@ canvas:active {
 
 #sample_queries li:hover {
   text-decoration: underline;
+}
+
+.node {
+  transition: all 200ms;
+}
+
+.node:hover {
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
 }
