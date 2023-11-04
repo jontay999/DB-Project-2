@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify,request
 from db import Database
-from db_util import parse_explain, tree_representation
+from db_util import parse_explain, tree_representation, summary_representation
 
 DEVELOPMENT_ENV = True
 app = Flask(__name__)
@@ -35,13 +35,14 @@ def run_sql_query():
             parsed_nodes = parse_explain(result)
             
             tree_rep = tree_representation(parsed_nodes)
+            summary_rep = summary_representation(tree_rep)
 
             # this is adjacency representation
             # for i in range(len(parsed_nodes)):
             #     parsed_nodes[i] = parsed_nodes[i].to_json()
             # return jsonify({'result': parsed_nodes})
             
-            return jsonify({'result': tree_rep})
+            return jsonify({'result': tree_rep, 'summary': summary_rep})
         else:
             return jsonify({'error': 'No SQL query provided in the request'})
     except Exception as e:

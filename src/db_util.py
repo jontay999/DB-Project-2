@@ -112,6 +112,14 @@ def tree_representation(all_nodes):
         return curr_d
     return dfs(d)
 
+def summary_representation(data,depth=0):
+    result = ""
+    indent = " " * depth
+    result += f"#{data['id']+1} {indent} ∟ {data['title']}\n"
+    for child in data.get('children', []):
+        result += summary_representation(child, depth + 1)
+    return result
+
 
 if __name__ == "__main__":
     print("Runing db_util!!")

@@ -28,9 +28,13 @@ sqlForm.addEventListener("submit", async (e) => {
             // document.getElementById("queryOutput").textContent = JSON.stringify(data, undefined, 2);
 
             update_root(data['result']);
+
+            // update summary box
+            document.getElementById("summary-content").textContent = data['summary'].split('\n').join('\n');
         } else {
             alert("sql query failed!")
             // dhruval put your modal here
+            openModal("Error", "Something went wrong! Please try again.");
         }
     } catch (error) {
         console.error('err:', error)
