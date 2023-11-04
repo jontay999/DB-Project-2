@@ -162,7 +162,17 @@ const svg = d3
 //necessary so that zoom knows where to zoom and unzoom from
 zm.translate([350, 20]);
 
+// add button in html to zoom in
+d3.select("#zoom_in").on("click", function () {
+    zm.scale(zm.scale() * 1.2);
+    zm.event(svg);
+});
 
+// add button in html to zoom out
+d3.select("#zoom_out").on("click", function () {
+    zm.scale(zm.scale() * 0.8);
+    zm.event(svg);
+});
 
 // function collapse(d) {
 //     if (d.children) {

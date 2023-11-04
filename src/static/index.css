@@ -59,3 +59,19 @@ canvas:active {
 .node:hover {
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
 }
+
+.zoom-container {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  padding: 5px 10px;
+}
+
+.zoom-container button {
+  background-color: white;
+  border: 1px solid grey;
+  width: 30px;
+  height: 30px;
+}
