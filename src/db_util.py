@@ -32,7 +32,13 @@ class Node:
         content = content.lstrip()
         for remove in to_remove:
             content = content.replace(remove,"")
-        for header in headers:
+        # where_condition = ""
+        # if "Filter:" in content:
+        #     where_condition = content.split("Filter:")[-1].strip()
+        #     if where_condition[0]=='(' and where_condition[-1]==')':
+        #         where_condition = where_condition[1:-1]
+        # self.where_condition = where_condition
+        for header in headers:     
             if header in content:
                 content = content.split(header)[-1].strip()
                 if content[0]=='(' and content[-1]==')':
@@ -70,6 +76,7 @@ class Node:
             "width": self.width,
             "secondary_content": self.secondary_content,
             "table": self.table,
+            # "where_condition": self.where_condition,
         }
 
 

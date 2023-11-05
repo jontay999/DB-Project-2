@@ -29,24 +29,36 @@ def test():
 def run_sql_query():
     try:
         sql_query = request.get_json().get('sql_query')
-        print("got the sql query:", sql_query);
         if sql_query:
             result = DATABASE.execute("EXPLAIN " + sql_query, True)
             parsed_nodes = parse_explain(result)
             
             tree_rep = tree_representation(parsed_nodes)
             summary_rep = summary_representation(tree_rep)
-
             # this is adjacency representation
             # for i in range(len(parsed_nodes)):
             #     parsed_nodes[i] = parsed_nodes[i].to_json()
             # return jsonify({'result': parsed_nodes})
-            
             return jsonify({'result': tree_rep, 'summary': summary_rep})
         else:
             return jsonify({'error': 'No SQL query provided in the request'})
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+@app.route("/query2", methods=['POST'])
+def run_sql_query_block_info():
+    try:
+        print("running query2")
+        data = request.get_json()
+        table = data["table"]
+        where_condition = data["where_condition"]
+        query = f"SELECT ctid FROM {table} WHERE {where_condition} order by ctid"
+        print(query)
+        result = DATABASE.execute(query)
+        return jsonify({'result': result})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 
 
 if __name__ == "__main__":

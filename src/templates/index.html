@@ -48,7 +48,6 @@
                       <textarea class="form-control" name="sql_query" id="sql_query" rows="3" placeholder="SELECT * FROM NATION;" required></textarea>
                     </div>
                     <div>
-                      
                       <div>Sample Queries</div>
                       <ul id="sample_queries">
                         <li>Sample Query 1</li>
@@ -89,7 +88,17 @@
                     <div>
                       <b>Rows:</b> <span id="rowInfo">1011788</span>
                     </div>
+                    <div>
+                       <span id="blocksAccessedInfo"><b>Blocks Accessed:</b> N.A.</span>
+                    </div>
+                    <div>
+                      <button type="button" id="blocksAccessedButton" class="btn btn-primary ">View Blocks and Tuples Accessed</button>
+                    </div>
                   </div>
+                </div>
+                <div class="col-md-4 border w-100" id="blocksAccessed" style="display:none">
+                  <h3>Blocks Accessed By the Query</h3>
+                  <span id="blocksAccessed-content"></span>
                 </div>
                 <div class="col-md-4 border w-100">
                   <h3>Summary</h3>
