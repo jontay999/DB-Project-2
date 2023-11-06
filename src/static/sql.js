@@ -3,7 +3,7 @@ sqlForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const inputValue = document.getElementById("sql_query").value;
   if (inputValue.includes("EXPLAIN")) {
-    alert("Do  not include explain in the query");
+    alert("Do not include explain in the query");
     return;
   }
   const jsonData = { sql_query: inputValue };

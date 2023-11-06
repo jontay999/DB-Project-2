@@ -65,6 +65,23 @@ def run_sql_query_block_info():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+# this is not in use yet, not sure if we want to add in the total number of tuples in a block
+@app.route("/query3", methods=['POST'])
+def run_sql_query_tuples_info():
+    # gives the total number of tuples in a block
+    try:
+        data = request.get_json()
+        table = data["table"]
+        block_id = data["block_id"]
+        query = f"SELECT count(*) FROM {table} WHERE (ctid::text::point)[0]={block_id};"
+        query_result = DATABASE.execute(query)
+        result = []
+        for x in query_result:
+            result.append(x)
+        return jsonify({'tuples': result})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
 
 
 if __name__ == "__main__":

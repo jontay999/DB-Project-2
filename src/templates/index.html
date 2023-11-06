@@ -45,17 +45,40 @@
                   <form id="sqlForm">
                     <div class="form-group my-4">
                       <label for="sql_query" style="font-weight:bold" class="mb-2">SQL Input</label>
-                      <textarea class="form-control" name="sql_query" id="sql_query" rows="3" placeholder="SELECT * FROM NATION;" required></textarea>
+                      
+                      <textarea class="form-control" name="sql_query" id="sql_query" rows="3" required>
+  SELECT
+      l_orderkey, 
+      sum(l_extendedprice * (1 - l_discount)) as revenue, 
+      o_orderdate, 
+      o_shippriority 
+  FROM
+      customer,
+      orders,
+      lineitem
+  WHERE
+      c_mktsegment = 'BUILDING'
+      and c_custkey = o_custkey
+      and l_orderkey = o_orderkey
+      and o_totalprice > 10
+      and l_extendedprice > 10
+  GROUP BY
+      l_orderkey,
+      o_orderdate,
+      o_shippriority
+  ORDER BY
+      revenue desc,
+      o_orderdate;</textarea>
                     </div>
-                    <div>
-                      <div>Sample Queries</div>
-                      <ul id="sample_queries">
-                        <li>Sample Query 1</li>
+                    <div class="form-group">
+                      <label for="sample_queries">Select Sample Query:</label>
+                      <select class="form-control" id="sample_queries" onchange="changeQuery(this)">
+                        <!-- <li>Sample Query 1</li>
                         <li>Sample Query 2</li>
-                        <li>Sample Query 3</li>
-                      </ul>
+                        <li>Sample Query 3</li> -->
+                        </select>
                     </div>
-                    <div class="d-flex mb-3 flex-row-reverse">
+                    <div class="d-flex m-3 flex-row-reverse">
                       <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                   </form>
@@ -68,12 +91,12 @@
                   <div id="nodeInfo">
                     <div>
                       <b>Title:</b>
-                      <span id="nodeTitle">SAMPLE CONTENT</span>
+                      <span id="nodeTitle">Sort</span>
                     </div>
                     <div>
                       <b>More Info: </b>
                       <span  id="secondaryContent">
-                      SAMPLE SECONDARY
+                        (sum((lineitem.l_extendedprice * ('1' - lineitem.l_discount)))) DESC, orders.o_orderdate
                     </span>
                     </div>
                     <div>
@@ -83,16 +106,14 @@
                       <b>Cost:</b> <span id="costInfo">(617704.6, 620739.96)</span>
                     </div>
                     <div>
-                      <b>Depth: </b> <span id="depthInfo">2</span>
+                      <b>Depth: </b> <span id="depthInfo">0</span>
                     </div>
                     <div>
-                      <b>Rows:</b> <span id="rowInfo">1011788</span>
+                      <b>Rows:</b> <span id="rowInfo">1214145</span>
                     </div>
                     <div>
-                       <span id="blocksAccessedInfo"><b>Blocks Accessed:</b> N.A.</span>
-                    </div>
-                    <div>
-                      <button type="button" id="blocksAccessedButton" class="btn btn-primary ">View Blocks and Tuples Accessed</button>
+                       <span id="blocksAccessedInfo"><b>Blocks and Tuples Accessed:</b> N.A.</span>
+                       <button type="button" id="blocksAccessedButton" class="btn btn-outline-primary btn-sm" style="display: none;">View Blocks and Tuples Accessed</button>
                     </div>
                   </div>
                 </div>
@@ -124,13 +145,23 @@
   </div>
 </div>
 <script>
-  const queries = ["SELECT * FROM NATION;","select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice * (1 - l_discount)) as sum_disc_price, sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from lineitem where l_extendedprice > 100 group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus;", "select l_orderkey, sum(l_extendedprice * (1 - l_discount)) as revenue, o_orderdate, o_shippriority from customer, orders, lineitem where c_mktsegment = 'BUILDING' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_totalprice > 10 and l_extendedprice > 10 group by l_orderkey, o_orderdate, o_shippriority order by revenue desc, o_orderdate;"]
+  const queries = ["SELECT l_orderkey, sum(l_extendedprice * (1 - l_discount)) as revenue, o_orderdate, o_shippriority FROM customer, orders, lineitem WHERE c_mktsegment = 'BUILDING' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_totalprice > 10 and l_extendedprice > 10 GROUP BY l_orderkey, o_orderdate, o_shippriority ORDER BY revenue desc, o_orderdate;","SELECT l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice * (1 - l_discount)) as sum_disc_price, sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order FROM lineitem WHERE l_shipdate <= date '1998-12-01' - interval '90' day GROUP BY l_returnflag, l_linestatus ORDER BY l_returnflag, l_linestatus;","SELECT l_orderkey, sum(l_extendedprice * (1 - l_discount)) as revenue, o_orderdate, o_shippriority FROM customer, orders, lineitem WHERE c_mktsegment = 'BUILDING' AND c_custkey = o_custkey AND l_orderkey = o_orderkey AND o_orderdate < date '1995-03-15' AND l_shipdate > date '1995-03-15' GROUP BY l_orderkey, o_orderdate, o_shippriority ORDER BY revenue desc, o_orderdate LIMIT 20;","SELECT n_name, sum(l_extendedprice * (1 - l_discount)) as revenue FROM customer, orders, lineitem, supplier, nation, region WHERE c_custkey = o_custkey AND l_orderkey = o_orderkey AND l_suppkey = s_suppkey AND c_nationkey = s_nationkey AND s_nationkey = n_nationkey AND n_regionkey = r_regionkey AND r_name = 'ASIA' AND o_orderdate >= date '1994-01-01' AND o_orderdate < date '1994-01-01' + interval '1' year GROUP BY n_name ORDER BY revenue desc;","SELECT sum(l_extendedprice * l_discount) as revenue FROM lineitem WHERE l_shipdate >= date '1994-01-01' AND l_shipdate < date '1994-01-01' + interval '1' year AND l_discount between 0.06 - 0.01 AND 0.06 + 0.01 AND l_quantity < 24;","SELECT c_custkey, c_name, sum(l_extendedprice * (1 - l_discount)) as revenue, c_acctbal, n_name, c_address, c_phone, c_comment FROM customer, orders, lineitem, nation WHERE c_custkey = o_custkey AND l_orderkey = o_orderkey AND o_orderdate >= date '1993-10-01' AND o_orderdate < date '1993-10-01' + interval '3' month AND l_returnflag = 'R' AND c_nationkey = n_nationkey GROUP BY c_custkey, c_name, c_acctbal, c_phone, n_name, c_address, c_comment ORDER BY revenue desc LIMIT 20;","SELECT l_shipmode, sum(case when o_orderpriority = '1-URGENT' OR o_orderpriority = '2-HIGH' then 1 else 0 end) as high_line_count, sum(case when o_orderpriority <> '1-URGENT' AND o_orderpriority <> '2-HIGH' then 1 else 0 end) AS low_line_count FROM orders, lineitem WHERE o_orderkey = l_orderkey AND l_shipmode in ('MAIL', 'SHIP') AND l_commitdate < l_receiptdate AND l_shipdate < l_commitdate AND l_receiptdate >= date '1994-01-01' AND l_receiptdate < date '1994-01-01' + interval '1' year GROUP BY l_shipmode ORDER BY l_shipmode;","SELECT 100.00 * sum(case when p_type like 'PROMO%' then l_extendedprice * (1 - l_discount) else 0 end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue FROM lineitem, part WHERE l_partkey = p_partkey AND l_shipdate >= date '1995-09-01' AND l_shipdate < date '1995-09-01' + interval '1' month;","SELECT sum(l_extendedprice* (1 - l_discount)) as revenue FROM lineitem, part WHERE ( p_partkey = l_partkey AND p_brand = 'Brand#12' AND p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG') AND l_quantity >= 1 AND l_quantity <= 1 + 10 AND p_size between 1 AND 5 AND l_shipmode in ('AIR', 'AIR REG') AND l_shipinstruct = 'DELIVER IN PERSON' ) OR ( p_partkey = l_partkey AND p_brand = 'Brand#23' AND p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK') AND l_quantity >= 10 AND l_quantity <= 10 + 10 AND p_size between 1 AND 10 AND l_shipmode in ('AIR', 'AIR REG') AND l_shipinstruct = 'DELIVER IN PERSON' ) OR ( p_partkey = l_partkey AND p_brand = 'Brand#34' AND p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG') AND l_quantity >= 20 AND l_quantity <= 20 + 10 AND p_size between 1 AND 15 AND l_shipmode in ('AIR', 'AIR REG') AND l_shipinstruct = 'DELIVER IN PERSON' );",]
+  // const queries = ["SELECT * FROM NATION;","select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice * (1 - l_discount)) as sum_disc_price, sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from lineitem where l_extendedprice > 100 group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus;", "select l_orderkey, sum(l_extendedprice * (1 - l_discount)) as revenue, o_orderdate, o_shippriority from customer, orders, lineitem where c_mktsegment = 'BUILDING' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_totalprice > 10 and l_extendedprice > 10 group by l_orderkey, o_orderdate, o_shippriority order by revenue desc, o_orderdate;"]
   const sample_queries = document.getElementById("sample_queries");
-  for(let i = 0;i<sample_queries.children.length;i++){
-    sample_queries.children[i].addEventListener('click', () => {
-      document.getElementById('sql_query').value = queries[i];
-    })
-  }
+  queries.forEach((query, index) => {
+    const option = document.createElement('option');
+    option.textContent = `Sample Query ${index + 1}`;
+    option.value = query;
+    sample_queries.appendChild(option);
+  });
+  sample_queries.addEventListener('change', function() {
+    const selectedIndex = this.selectedIndex;
+    document.getElementById('sql_query').value = queries[selectedIndex];
+  });
+
+function changeQuery(selectElement) {
+  document.getElementById('sql_query').value = selectElement.value;
+}
 
 
 </script>

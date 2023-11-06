@@ -18,10 +18,10 @@ function updateNodeInfo(nodeInfo) {
   blocksAccessedDiv.style.display = "none";
   blocksAccessedInfo.style.display = "block";
   if (nodeInfo.table === null) {
-    blocksAccessedInfo.innerHTML = "<b>Blocks Accessed:</b> N.A.";
+    blocksAccessedInfo.innerHTML = "<b>Blocks and Tuples Accessed:</b> N.A.";
     blocksAccessedButton.style.display = "none";
   } else {
-    blocksAccessedInfo.innerHTML = `<b>Blocks Accessed:</b>`;
+    blocksAccessedInfo.innerHTML = `<b>Blocks and Tuples Accessed:</b>`;
     blocksAccessedButton.style.display = "block";
   }
 }
