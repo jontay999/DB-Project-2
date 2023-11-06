@@ -378,7 +378,6 @@ document
       blocksAccessedButton.style.display = "none";
       blocksAccessedDiv.style.display = "block";
       blocksAccessedContent.textContent = "Loading...";
-      //   console.log(clickedNodeData);
       if (clickedNodeData != null) {
         const response = await fetch("/query2", {
           method: "POST",
@@ -387,7 +386,6 @@ document
           },
           body: JSON.stringify({
             table: clickedNodeData.table,
-            // where_condition: clickedNodeData.where_condition,
             where_condition: clickedNodeData.secondary_content[0],
           }),
         });
@@ -397,13 +395,18 @@ document
           if (data.error) {
             openModal("Error", JSON.stringify(data, undefined, 2));
           }
-          let blocks = data["blocks"]
-            .map(
-              (block) =>
-                `<li><span onclick='openModal("Tuples Accessed in Block #${block}", "${data["blocks_and_tuples_dict"][block]}")' style="color: blue; text-decoration: underline; cursor: pointer;">${block}</span></li>`
-            )
-            .join("");
-          blocksAccessedContent.innerHTML = blocks;
+          let tablerowscontent = data["blocks"].map((block) => {
+            let tuples = data["blocks_and_tuples_dict"][block];
+            let displayTuples =
+              tuples.length > 5 ? `${tuples.slice(0, 5)}...` : tuples;
+            return `<tr onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')"><td>${block}</td> <td>${displayTuples}</td></tr>`;
+          });
+
+          blocksAccessedContent.innerHTML =
+            "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Tuples Accessed</th></tr></thead><tbody>" +
+            tablerowscontent.join("") +
+            "</tbody></table>";
+          blocksAccessedContent.table.style = "border-top:none";
         } else {
           alert("sql query failed!");
           openModal("Error", "Something went wrong! Please try again.");
@@ -413,3 +416,34 @@ document
       console.error("err:", error);
     }
   });
+
+async function fetchTuples(block, tuples, table) {
+  const response = await fetch("/query3", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      table: table,
+      block_id: block,
+      tuples_id: tuples,
+    }),
+  });
+  if (response.ok) {
+    let data = await response.json();
+    // console.log("got data from query 3:", data);
+    if (data.error) {
+      openModal("Error", JSON.stringify(data, undefined, 2));
+    }
+    let tableRows = data["tuples"]
+      .map((tuple) => `<tr><td>${tuple}</td></tr>`)
+      .join("");
+    openHTMLModal(
+      "Tuple within Block " + block,
+      `<table class="table"><tbody>${tableRows}<tbody></table>`
+    );
+  } else {
+    alert("sql query failed!");
+    openModal("Error", "Something went wrong! Please try again.");
+  }
+}
