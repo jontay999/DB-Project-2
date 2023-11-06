@@ -366,7 +366,19 @@ document
   .getElementById("blocksAccessedButton")
   .addEventListener("click", async () => {
     try {
-      console.log(clickedNodeData);
+      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
+      const blocksAccessedContent = document.getElementById(
+        "blocksAccessed-content"
+      );
+      const blocksAccessedInfo = document.getElementById("blocksAccessedInfo");
+      const blocksAccessedButton = document.getElementById(
+        "blocksAccessedButton"
+      );
+      blocksAccessedInfo.style.display = "none";
+      blocksAccessedButton.style.display = "none";
+      blocksAccessedDiv.style.display = "block";
+      blocksAccessedContent.textContent = "Loading...";
+      //   console.log(clickedNodeData);
       if (clickedNodeData != null) {
         const response = await fetch("/query2", {
           method: "POST",
@@ -379,15 +391,19 @@ document
             where_condition: clickedNodeData.secondary_content[0],
           }),
         });
+
         if (response.ok) {
           let data = await response.json();
           if (data.error) {
             openModal("Error", JSON.stringify(data, undefined, 2));
           }
-          console.log("got data:", data);
-          document.getElementById("blocksAccessed").style.display = "block";
-          document.getElementById("blocksAccessed-content").textContent =
-            JSON.stringify(data);
+          let blocks = data["blocks"]
+            .map(
+              (block) =>
+                `<li><span onclick='openModal("Tuples Accessed in Block #${block}", "${data["blocks_and_tuples_dict"][block]}")' style="color: blue; text-decoration: underline; cursor: pointer;">${block}</span></li>`
+            )
+            .join("");
+          blocksAccessedContent.innerHTML = blocks;
         } else {
           alert("sql query failed!");
           openModal("Error", "Something went wrong! Please try again.");

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify,request
 from db import Database
 from db_util import parse_explain, tree_representation, summary_representation
+from collections import defaultdict
 
 DEVELOPMENT_ENV = True
 app = Flask(__name__)
@@ -48,14 +49,19 @@ def run_sql_query():
 @app.route("/query2", methods=['POST'])
 def run_sql_query_block_info():
     try:
-        print("running query2")
+        # print("running query2")
         data = request.get_json()
         table = data["table"]
         where_condition = data["where_condition"]
         query = f"SELECT ctid FROM {table} WHERE {where_condition} order by ctid"
-        print(query)
-        result = DATABASE.execute(query)
-        return jsonify({'result': result})
+        query_result = DATABASE.execute(query)
+        result = defaultdict(set)
+        for x in query_result:
+            block_id, tuple_id = x[0][1:-1].split(",")
+            result[block_id].add(tuple_id)
+        result = {key: sorted([int(x) for x in value]) for key, value in result.items()}
+        blocks = list(result.keys())
+        return jsonify({'blocks': blocks, 'blocks_and_tuples_dict': result})
     except Exception as e:
         return jsonify({'error': str(e)})
 

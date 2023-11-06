@@ -5,7 +5,7 @@ function updateNodeInfo(nodeInfo) {
   const costInfo = document.getElementById("costInfo");
   const depthInfo = document.getElementById("depthInfo");
   const rowInfo = document.getElementById("rowInfo");
-  const blocksAccessed = document.getElementById("blocksAccessed");
+  const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
   const blocksAccessedInfo = document.getElementById("blocksAccessedInfo");
   const blocksAccessedButton = document.getElementById("blocksAccessedButton");
   nodeTitle.textContent = nodeInfo.title;
@@ -15,19 +15,13 @@ function updateNodeInfo(nodeInfo) {
   costInfo.textContent = `(${nodeInfo.cost[0]}, ${nodeInfo.cost[1]})`;
   depthInfo.textContent = nodeInfo.depth;
   rowInfo.textContent = nodeInfo.rows;
+  blocksAccessedDiv.style.display = "none";
+  blocksAccessedInfo.style.display = "block";
   if (nodeInfo.table === null) {
     blocksAccessedInfo.innerHTML = "<b>Blocks Accessed:</b> N.A.";
     blocksAccessedButton.style.display = "none";
-    blocksAccessed.style.display = "none";
   } else {
     blocksAccessedInfo.innerHTML = `<b>Blocks Accessed:</b>`;
     blocksAccessedButton.style.display = "block";
-    blocksAccessed.style.display = "block";
   }
-  //   else {
-  //     const button = document.createElement("button");
-  //     button.textContent = "View Blocks and Tuples Accessed";
-  //     blocksAccessedInfo.textContent = ""; // clear the span
-  //     blocksAccessedInfo.appendChild(button); // append the button to the span
-  //   }
 }
