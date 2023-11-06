@@ -75,3 +75,7 @@ canvas:active {
   width: 30px;
   height: 30px;
 }
+
+.modal-body {
+  word-wrap: break-word;
+}
