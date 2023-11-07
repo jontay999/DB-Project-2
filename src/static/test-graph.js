@@ -401,7 +401,7 @@ document
           let tablerowscontent = data["blocks"].map((block) => {
             let tuples_count = data["blocks_and_tuples_count"][block];
             let tuples = data["blocks_and_tuples_dict"][block];
-            return `<tr><td>${block}</td><td><span>${tuples_count}</span><span onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin-left: 4px;">(View more info)</span></td></tr>`;
+            return `<tr><td>${block}</td><td><span>${tuples_count}</span><span onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin-left: 4px;">(View details)</span></td></tr>`;
             // let tuples = data["blocks_and_tuples_dict"][block];
             //     let displayTuples =
             //       tuples.length > 5 ? `${tuples.slice(0, 5)}` : tuples;
@@ -473,11 +473,7 @@ async function fetchTuples(block, tuples, table) {
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
     let topTuplesData = `<div class="flex flex-col"><h5>Tuples Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
-    // openHTMLModal(
-    //   `First ${tuplesCount} Tuples within Block ` + block,
-    //   `<table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table>`
-    // );
-    openHTMLModal(
+    openModal(
       `Information on Tuples Accessed in Block ${block}`,
       tuplesAccessed + topTuplesData
     );

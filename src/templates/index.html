@@ -8,7 +8,7 @@
     aria-labelledby="modalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal-title">Modal title</h5>
@@ -21,7 +21,13 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" id="modal-body">...</div>
+        <div
+          class="modal-body"
+          id="modal-body"
+          style="overflow: auto; max-height: 70vh"
+        >
+          ...
+        </div>
         <div class="modal-footer">
           <button
             type="button"
