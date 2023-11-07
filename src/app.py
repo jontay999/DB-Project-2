@@ -74,14 +74,13 @@ def run_sql_query_tuples_info():
         tuples_id = data["tuples_id"]
         # gives the tuples in a block
         tuples_as_string = "(" + tuples_id + ")"
-        query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid limit 10;"
-        query_result = DATABASE.execute(query)
-        # print("query_result is: ", query_result)
+        query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid limit 5;"
+        query_result, headers = DATABASE.execute_with_headers(query)
         result = []
         # gives the tuples that match the tuples accessed
         for x in query_result:
             result.append(x)
-        return jsonify({'tuples': result})
+        return jsonify({'tuples': result, 'headers': headers, "count": len(result)})
     except Exception as e:
         return jsonify({'error': str(e)})
     

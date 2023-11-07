@@ -62,6 +62,18 @@ class Database:
                 result = cursor.fetchall()
         
         if needs_output: return result
+    
+    def execute_with_headers(self, query, needs_output=True):
+        assert self.is_connected(), "Connection does not exist!"
+        result = None
+        with self.connection.cursor() as cursor:
+            cursor = self.connection.cursor()
+            cursor.execute(query)
+            if needs_output:
+                result = cursor.fetchall()
+                headers = [desc[0] for desc in cursor.description]
+        
+        if needs_output: return result, headers
 
     def close(self):
         if self.connection == None: raise Exception("Connection does not exist!")
