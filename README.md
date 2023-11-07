@@ -16,8 +16,9 @@ python3 project.py
 
 ### Architecture
 
-- PyQT: GUI
-- Postgres
+- Web Server: Flask
+- Frontend Framework: HTML/CSS/JS
+- Database: Postgres
 
 ## Python Setup
 
