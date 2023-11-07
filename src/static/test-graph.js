@@ -399,27 +399,29 @@ document
           }
 
           let tablerowscontent = data["blocks"].map((block) => {
+            let tuples_count = data["blocks_and_tuples_count"][block];
             let tuples = data["blocks_and_tuples_dict"][block];
-            let displayTuples =
-              tuples.length > 5 ? `${tuples.slice(0, 5)}` : tuples;
-            let remainingTuples = tuples.length > 5 ? tuples.slice(5) : "";
-
-            return `<tr>
-            <td>${block}</td>
-            <td>
-              <span onclick="fetchTuples('${block}', '${displayTuples}', '${
-              clickedNodeData.table
-            }')" style="color: blue; text-decoration: underline; cursor: pointer; display:inline;">${displayTuples}</span>
-              ${
-                tuples.length > 5
-                  ? `<span onclick="showRemainingTuples(this, ',${remainingTuples}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em;">more</span>`
-                  : ""
-              }
-            </td>
-          </tr>`;
+            return `<tr><td>${block}</td><td><span>${tuples_count}</span><span onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin-left: 4px;">(View more info)</span></td></tr>`;
+            // let tuples = data["blocks_and_tuples_dict"][block];
+            //     let displayTuples =
+            //       tuples.length > 5 ? `${tuples.slice(0, 5)}` : tuples;
+            //     let remainingTuples = tuples.length > 5 ? tuples.slice(5) : "";
+            //     return `<tr>
+            //     <td>${block}</td>
+            //     <td>
+            //       <span onclick="fetchTuples('${block}', '${displayTuples}', '${
+            //       clickedNodeData.table
+            //     }')" style="color: blue; text-decoration: underline; cursor: pointer; display:inline;">${displayTuples}</span>
+            //       ${
+            //         tuples.length > 5
+            //           ? `<span onclick="showRemainingTuples(this, ',${remainingTuples}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em;">more</span>`
+            //           : ""
+            //       }
+            //     </td>
+            //   </tr>`;
           });
           blocksAccessedContent.innerHTML =
-            "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Tuples Accessed</th></tr></thead><tbody>" +
+            "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Number of Tuples Accessed</th></tr></thead><tbody>" +
             tablerowscontent.join("") +
             "</tbody></table>";
         } else {
@@ -457,6 +459,9 @@ async function fetchTuples(block, tuples, table) {
     if (data.error) {
       openModal("Error", JSON.stringify(data, undefined, 2));
     }
+    // display of tuples accessed
+    let tuplesAccessed = `<div style="margin-bottom:30px" ><h5>Indexes of Tuples Accessed</h5><div>${tuples}</div></div>`;
+    // table for top 5 tuples in block
     let tableRows = data["tuples"]
       .map((tuple) => {
         let cells = tuple.map((item) => `<td>${item}</td>`).join("");
@@ -467,9 +472,14 @@ async function fetchTuples(block, tuples, table) {
     let tableHeaders = data["headers"]
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
+    let topTuplesData = `<div class="flex flex-col"><h5>First ${tuplesCount} Tuples Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
+    // openHTMLModal(
+    //   `First ${tuplesCount} Tuples within Block ` + block,
+    //   `<table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table>`
+    // );
     openHTMLModal(
-      `First ${tuplesCount} Tuples within Block ` + block,
-      `<table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table>`
+      `Information on Tuples Accessed in Block ${block}`,
+      tuplesAccessed + topTuplesData
     );
   } else {
     alert("sql query failed!");

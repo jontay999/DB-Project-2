@@ -63,7 +63,8 @@ def run_sql_query_block_info():
             result[block_id].add(tuple_id)
         result = {key: sorted([int(x) for x in value]) for key, value in result.items()}
         blocks = list(result.keys())
-        return jsonify({'blocks': blocks, 'blocks_and_tuples_dict': result})
+        blocks_and_tuples_count = {key: len(value) for key, value in result.items()}
+        return jsonify({'blocks': blocks, 'blocks_and_tuples_dict': result, "blocks_and_tuples_count": blocks_and_tuples_count})
     except Exception as e:
         return jsonify({'error': str(e)})
 
