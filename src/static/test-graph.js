@@ -472,7 +472,7 @@ async function fetchTuples(block, tuples, table) {
     let tableHeaders = data["headers"]
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
-    let topTuplesData = `<div class="flex flex-col"><h5>First ${tuplesCount} Tuples Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
+    let topTuplesData = `<div class="flex flex-col"><h5>Tuples Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
     // openHTMLModal(
     //   `First ${tuplesCount} Tuples within Block ` + block,
     //   `<table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table>`
