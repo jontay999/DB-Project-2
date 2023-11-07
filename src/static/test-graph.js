@@ -386,7 +386,9 @@ document
           },
           body: JSON.stringify({
             table: clickedNodeData.table,
-            where_condition: clickedNodeData.secondary_content[0],
+            where_condition: clickedNodeData.secondary_content[0]
+              ? clickedNodeData.secondary_content[0]
+              : "",
           }),
         });
 

@@ -49,11 +49,13 @@ def run_sql_query():
 @app.route("/query2", methods=['POST'])
 def run_sql_query_block_info():
     try:
-        # print("running query2")
         data = request.get_json()
         table = data["table"]
         where_condition = data["where_condition"]
-        query = f"SELECT ctid FROM {table} WHERE {where_condition} order by ctid"
+        if where_condition:
+            query = f"SELECT ctid FROM {table} WHERE {where_condition} order by ctid;"
+        else:
+            query = f"SELECT ctid FROM {table} order by ctid;"
         query_result = DATABASE.execute(query)
         result = defaultdict(set)
         for x in query_result:

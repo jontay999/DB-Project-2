@@ -62,7 +62,6 @@
               <div class="form-group my-4">
                 <h3>SQL Input</h3>
                 <hr />
-
                 <textarea
                   class="form-control"
                   name="sql_query"
@@ -100,11 +99,7 @@
                   class="form-select"
                   id="sample_queries"
                   onchange="changeQuery(this)"
-                >
-                  <!-- <li>Sample Query 1</li>
-                        <li>Sample Query 2</li>
-                        <li>Sample Query 3</li> -->
-                </select>
+                ></select>
               </div>
               <div class="d-flex m-3 flex-row-reverse">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -114,9 +109,12 @@
           <div class="col-md-4 border w-100 py-2">
             <h3 class="mt-2">Node Info Content</h3>
             <hr />
-
+            <div id="nodeInfo_placeholder">
+              Please click on a node from the Query Execution Plan on the right
+              to view its node content!
+            </div>
             <!-- CADY to take note, if no node clicked so far, show appropriate placeholder content -->
-            <div id="nodeInfo">
+            <div id="nodeInfo" style="display: none">
               <div>
                 <b>Title:</b>
                 <span id="nodeTitle">Sort</span>

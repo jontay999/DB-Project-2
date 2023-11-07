@@ -32,6 +32,14 @@ sqlForm.addEventListener("submit", async (e) => {
       document.getElementById("summary-content").textContent = data["summary"]
         .split("\n")
         .join("\n");
+
+      // update node info box
+      const nodeInfoDiv = document.getElementById("nodeInfo");
+      const nodeInfoPlaceholder = document.getElementById(
+        "nodeInfo_placeholder"
+      );
+      nodeInfoDiv.style.display = "none";
+      nodeInfoPlaceholder.style.display = "block";
     } else {
       alert("sql query failed!");
       // dhruval put your modal here

@@ -8,7 +8,11 @@ function updateNodeInfo(nodeInfo) {
   const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
   const blocksAccessedInfo = document.getElementById("blocksAccessedInfo");
   const blocksAccessedButton = document.getElementById("blocksAccessedButton");
+  const nodeInfoDiv = document.getElementById("nodeInfo");
+  const nodeInfoPlaceholder = document.getElementById("nodeInfo_placeholder");
   nodeTitle.textContent = nodeInfo.title;
+  nodeInfoDiv.style.display = "block";
+  nodeInfoPlaceholder.style.display = "none";
   // cady to take note that secondary content is an array so render it appropriately if got multiple lines
   secondaryContent.textContent = nodeInfo.secondary_content[0];
   widthInfo.textContent = nodeInfo.width;
