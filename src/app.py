@@ -51,11 +51,12 @@ def run_sql_query_block_info():
     try:
         data = request.get_json()
         table = data["table"]
+        from_tables = data["from_tables"]
         where_condition = data["where_condition"]
         if where_condition:
-            query = f"SELECT ctid FROM {table} WHERE {where_condition} order by ctid;"
+            query = f"SELECT {table}.ctid FROM {from_tables} WHERE {where_condition} order by ctid;"
         else:
-            query = f"SELECT ctid FROM {table} order by ctid;"
+            query = f"SELECT {table}.ctid FROM {from_tables} order by ctid;"
         query_result = DATABASE.execute(query)
         result = defaultdict(set)
         for x in query_result:

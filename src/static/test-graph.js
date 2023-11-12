@@ -379,6 +379,10 @@ document
       blocksAccessedDiv.style.display = "block";
       blocksAccessedContent.textContent = "Loading...";
       if (clickedNodeData != null) {
+        let table = clickedNodeData.table;
+        if (clickedNodeData.secondary_table) {
+          table += "," + clickedNodeData.secondary_table;
+        }
         const response = await fetch("/query2", {
           method: "POST",
           headers: {
@@ -389,6 +393,7 @@ document
             where_condition: clickedNodeData.secondary_content[0]
               ? clickedNodeData.secondary_content[0]
               : "",
+            from_tables: table,
           }),
         });
 

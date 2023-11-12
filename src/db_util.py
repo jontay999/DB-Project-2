@@ -7,6 +7,7 @@ class Node:
         self.parse_primary_content(primary_content)
         self.secondary_content = []
         self.children = []
+        self.secondary_table = None
         
     def parse_primary_content(self, content):
         content = content.strip()[:-1]
@@ -28,21 +29,22 @@ class Node:
 
     def parse_secondary_content(self, content):
         headers = ["Group Key:","Sort Key:","Filter:","Hash Cond:","Index Cond:"]
-        to_remove = ["::numeric","::bpchar","::date"]
+        to_remove = ["::numeric","::bpchar[]","::bpchar","::date"]
         content = content.lstrip()
         for remove in to_remove:
             content = content.replace(remove,"")
-        # where_condition = ""
-        # if "Filter:" in content:
-        #     where_condition = content.split("Filter:")[-1].strip()
-        #     if where_condition[0]=='(' and where_condition[-1]==')':
-        #         where_condition = where_condition[1:-1]
-        # self.where_condition = where_condition
+        def get_secondary_table_name(content):
+            list_of_words = content.split(" ")
+            for word in list_of_words:
+                if "." in word:
+                    return word.split(".")[0]
         for header in headers:     
             if header in content:
                 content = content.split(header)[-1].strip()
                 if content[0]=='(' and content[-1]==')':
                     content = content[1:-1]
+                if header == "Index Cond:":
+                    self.secondary_table = get_secondary_table_name(content)
                 return content
         return content
     
@@ -76,7 +78,7 @@ class Node:
             "width": self.width,
             "secondary_content": self.secondary_content,
             "table": self.table,
-            # "where_condition": self.where_condition,
+            "secondary_table": self.secondary_table,
         }
 
 

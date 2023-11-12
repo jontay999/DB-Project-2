@@ -40,6 +40,10 @@ sqlForm.addEventListener("submit", async (e) => {
       );
       nodeInfoDiv.style.display = "none";
       nodeInfoPlaceholder.style.display = "block";
+
+      // update blocks accessed block
+      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
+      blocksAccessedDiv.style.display = "none";
     } else {
       alert("sql query failed!");
       // dhruval put your modal here
