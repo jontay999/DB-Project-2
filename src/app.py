@@ -9,12 +9,12 @@ DATABASE = None
 
 
 app_data = {
-    "name": "Starter Template",
-    "description": "A basic Flask app using bootstrap for layout",
+    "name": "DB Project 2",
+    "description": "A basic Flask app using bootstrap, for Query Execution plan Visualization",
     "author": "Jon",
-    "html_title": "Jon template",
-    "project_name": "Starter Template",
-    "keywords": "flask, webapp, template, basic",
+    "html_title": "DB Project",
+    "project_name": "DB Project",
+    "keywords": "",
 }
 
 

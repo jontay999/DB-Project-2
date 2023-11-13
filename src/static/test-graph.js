@@ -1,9 +1,9 @@
 const margin = {
-    top: 20,
-    right: 120,
-    bottom: 20,
-    left: 120,
-  },
+  top: 20,
+  right: 120,
+  bottom: 20,
+  left: 120,
+},
   width = 960 - margin.right - margin.left,
   height = 800 - margin.top - margin.bottom;
 
@@ -185,6 +185,7 @@ d3.select("#zoom_out").on("click", function () {
 // }
 
 function update_root(new_root) {
+  console.log("my root:", new_root)
   root = new_root;
 
   // only put this when you want things to start out collapsed
@@ -198,9 +199,18 @@ function update_root(new_root) {
 d3.select("#body").style("height", "800px");
 
 function update(source) {
+
+  // remove all previous nodes
+  for (let old_node of document.querySelectorAll('g.node')) {
+    old_node.remove();
+  }
+  for (let old_link of document.querySelectorAll('path.link')) {
+    old_link.remove()
+  }
+
   // Compute the new tree layout.
-  const nodes = tree.nodes(root).reverse(),
-    links = tree.links(nodes);
+  const nodes = tree.nodes(source).reverse()
+  const links = tree.links(nodes);
 
   // Normalize for fixed-depth.
   nodes.forEach(function (d) {
@@ -212,6 +222,8 @@ function update(source) {
   const node = svg.selectAll("g.node").data(nodes, function (d) {
     return d.id;
   });
+
+
 
   // Enter any new nodes at the parent's previous position.
   const nodeEnter = node
