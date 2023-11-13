@@ -33,7 +33,7 @@ def run_sql_query():
         if sql_query:
             result = DATABASE.execute("EXPLAIN (analyse,buffers,costs off) " + sql_query, True)
             parsed_nodes = parse_explain(result)
-            
+             
             tree_rep = tree_representation(parsed_nodes)
             summary_rep = summary_representation(tree_rep)
             return jsonify({'result': tree_rep, 'summary': summary_rep, 'timing': timing_representation(result)})
@@ -53,6 +53,7 @@ def run_sql_query_block_info():
             query = f"SELECT {table}.ctid FROM {from_tables} WHERE {where_condition} order by ctid;"
         else:
             query = f"SELECT {table}.ctid FROM {from_tables} order by ctid;"
+        print("query 2 is:", query)
         query_result = DATABASE.execute(query)
         result = defaultdict(set)
         for x in query_result:
@@ -74,7 +75,7 @@ def run_sql_query_tuples_info():
         tuples_id = data["tuples_id"]
         # gives the tuples in a block
         tuples_as_string = "(" + tuples_id + ")"
-        query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid ;"
+        query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid limit 5;"
         query_result, headers = DATABASE.execute_with_headers(query)
         result = []
         # gives the tuples that match the tuples accessed
