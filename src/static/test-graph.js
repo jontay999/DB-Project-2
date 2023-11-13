@@ -1,9 +1,9 @@
 const margin = {
-    top: 20,
-    right: 120,
-    bottom: 20,
-    left: 120,
-  },
+  top: 20,
+  right: 120,
+  bottom: 20,
+  left: 120,
+},
   width = 960 - margin.right - margin.left,
   height = 800 - margin.top - margin.bottom;
 
@@ -144,8 +144,8 @@ let root = {
 let clickedNodeData = null;
 
 const duration = 750,
-  rectW = 60 * 2 * 2 + 20,
-  rectH = 30 * 2 + 5;
+  rectW = 60 * 2 * 2 + 40,
+  rectH = 30 * 3 + 5;
 
 const tree = d3.layout.tree().nodeSize([70, 40]);
 const diagonal = d3.svg.diagonal().projection(function (d) {
@@ -197,6 +197,14 @@ function update_root(new_root) {
 }
 
 d3.select("#body").style("height", "800px");
+
+function getBufferString(buffer_dict) {
+  arr = []
+  for (let [key, value] of Object.entries(buffer_dict)) {
+    arr.push(`${key}: ${value}`)
+  }
+  return arr.join(', ')
+}
 
 function update(source) {
   // remove all previous nodes
@@ -253,11 +261,17 @@ function update(source) {
     .append("xhtml:div")
     .style("height", "100%")
     .html(function (d) {
+      console.log('d info:', d)
       // Create a custom HTML structure with two spans
       return `
-            <div style='height:100%;width:100%;margin:auto;display:flex;justify-content:space-between; padding: 10px 15px;'>
+            <div style='height:100%;width:100%;margin:auto;padding: 10px 15px;'>
+              <div style='display:flex;justify-content:space-between;'>    
                 <span><b>${d.title}</b></span>
                 <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
+              </div>
+              <div style='font-size:13px;color:grey'>
+                <span><b>Buffers: </b> ${d.buffer ? getBufferString(d.buffer) : "Unavailable"}</span>
+              </div>
             </div>
         `;
     });
