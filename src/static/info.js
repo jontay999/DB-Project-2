@@ -22,10 +22,10 @@ function updateNodeInfo(nodeInfo) {
   blocksAccessedDiv.style.display = "none";
   blocksAccessedInfo.style.display = "block";
   if (nodeInfo.table === null) {
-    blocksAccessedInfo.innerHTML = "<b>Blocks and Tuples Accessed:</b> N.A.";
+    blocksAccessedInfo.textContent = "N.A.";
     blocksAccessedButton.style.display = "none";
   } else {
-    blocksAccessedInfo.innerHTML = `<b>Blocks and Tuples Accessed:</b>`;
+    blocksAccessedInfo.textContent = "";
     blocksAccessedButton.style.display = "block";
   }
 }
