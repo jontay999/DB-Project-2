@@ -33,6 +33,10 @@ sqlForm.addEventListener("submit", async (e) => {
         .split("\n")
         .join("\n");
 
+      const timingList = data["timing"];
+      const overviewContent = document.getElementById("overview_content");
+      overviewContent.textContent = timingList.join("\n");
+
       // update node info box
       const nodeInfoDiv = document.getElementById("nodeInfo");
       const nodeInfoPlaceholder = document.getElementById(
