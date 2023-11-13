@@ -360,7 +360,6 @@ function update(source) {
 function clickNode(d) {
   updateNodeInfo(d);
   clickedNodeData = d;
-  // console.log("clicked on d:", d)
   return;
 }
 

@@ -111,12 +111,8 @@ if __name__ == "__main__":
     db = Database()
     db.connect('tpc_h')
     for query in all_queries:
-        result = db.execute("EXPLAIN " + query)
+        result = db.execute("EXPLAIN (analyse, buffers) " + query)
         parsed_nodes = parse_explain(result)
-        breakpoint()
-        # do stuff with the parsed nodes
     db.close()
-
-    # db.create_tables(STARTING_DATABASE_NAME, DATABASE_NAME)
 
 
