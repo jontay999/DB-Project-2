@@ -49,17 +49,14 @@ def run_sql_query_block_info():
         table = data["table"]
         from_tables = data["from_tables"]
         where_condition = data["where_condition"]
-        if where_condition:
-            query = f"SELECT {table}.ctid FROM {from_tables} WHERE {where_condition} order by ctid;"
-        else:
-            query = f"SELECT {table}.ctid FROM {from_tables} order by ctid;"
+        query = f"SELECT {table}.ctid FROM {from_tables} {'WHERE ' + where_condition if where_condition else ''} order by ctid;"
         print("query 2 is:", query)
         query_result = DATABASE.execute(query)
         result = defaultdict(set)
         for x in query_result:
             block_id, tuple_id = x[0][1:-1].split(",")
-            result[block_id].add(tuple_id)
-        result = {key: sorted([int(x) for x in value]) for key, value in result.items()}
+            result[block_id].add(int(tuple_id))
+        result = {key: sorted(value) for key, value in result.items()}
         blocks = list(result.keys())
         blocks_and_tuples_count = {key: len(value) for key, value in result.items()}
         return jsonify({'blocks': blocks, 'blocks_and_tuples_dict': result, "blocks_and_tuples_count": blocks_and_tuples_count})
@@ -77,11 +74,7 @@ def run_sql_query_tuples_info():
         tuples_as_string = "(" + tuples_id + ")"
         query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid limit 5;"
         query_result, headers = DATABASE.execute_with_headers(query)
-        result = []
-        # gives the tuples that match the tuples accessed
-        for x in query_result:
-            result.append(x)
-        return jsonify({'tuples': result, 'headers': headers, "count": len(result)})
+        return jsonify({'tuples': query_result, 'headers': headers})
     except Exception as e:
         return jsonify({'error': str(e)})
     

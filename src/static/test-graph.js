@@ -1,9 +1,9 @@
 const margin = {
-  top: 20,
-  right: 120,
-  bottom: 20,
-  left: 120,
-},
+    top: 20,
+    right: 120,
+    bottom: 20,
+    left: 120,
+  },
   width = 960 - margin.right - margin.left,
   height = 800 - margin.top - margin.bottom;
 
@@ -178,7 +178,7 @@ d3.select("#zoom_out").on("click", function () {
 
 // function collapse(d) {
 //     if (d.children) {
-//         d._children = d.children;
+//         d._children = d.children;x
 //         d._children.forEach(collapse);
 //         d.children = null;
 //     }
@@ -199,11 +199,11 @@ function update_root(new_root) {
 d3.select("#body").style("height", "800px");
 
 function getBufferString(buffer_dict) {
-  arr = []
+  arr = [];
   for (let [key, value] of Object.entries(buffer_dict)) {
-    arr.push(`${key}: ${value}`)
+    arr.push(`${key}: ${value}`);
   }
-  return arr.join(', ')
+  return arr.join(", ");
 }
 
 function update(source) {
@@ -261,7 +261,7 @@ function update(source) {
     .append("xhtml:div")
     .style("height", "100%")
     .html(function (d) {
-      console.log('d info:', d)
+      console.log("d info:", d);
       // Create a custom HTML structure with two spans
       return `
             <div style='height:100%;width:100%;margin:auto;padding: 10px 15px;'>
@@ -270,7 +270,9 @@ function update(source) {
                 <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
               </div>
               <div style='font-size:13px;color:grey'>
-                <span><b>Buffers: </b> ${d.buffer ? getBufferString(d.buffer) : "Unavailable"}</span>
+                <span><b>Buffers: </b> ${
+                  d.buffer ? getBufferString(d.buffer) : "Unavailable"
+                }</span>
               </div>
             </div>
         `;
@@ -398,6 +400,7 @@ document
       );
       blocksAccessedInfo.style.display = "none";
       blocksAccessedButton.style.display = "none";
+      document.getElementById("blocksAccessedNodeInfo").style.display = "block";
       blocksAccessedDiv.style.display = "block";
       blocksAccessedContent.textContent = "Loading...";
       if (clickedNodeData != null) {
@@ -451,6 +454,8 @@ document
             "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Number of Tuples Accessed</th></tr></thead><tbody>" +
             tablerowscontent.join("") +
             "</tbody></table>";
+          document.getElementById("blocksAccessedNodeInfo").style.display =
+            "none";
         } else {
           alert("sql query failed!");
           openModal("Error", "Something went wrong! Please try again.");
@@ -495,7 +500,6 @@ async function fetchTuples(block, tuples, table) {
         return `<tr>${cells}</tr>`;
       })
       .join("");
-    const tuplesCount = data["count"];
     let tableHeaders = data["headers"]
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
