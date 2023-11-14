@@ -386,27 +386,32 @@ function redraw() {
 
 update_root(root);
 
+// Get blocks and tuples accessed when user clicks on the button
 document
   .getElementById("blocksAccessedButton")
   .addEventListener("click", async () => {
     try {
-      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
-      const blocksAccessedContent = document.getElementById(
-        "blocksAccessed-content"
-      );
+      // Open the blocks accessed div when button is clicked and show loading
       const blocksAccessedInfo = document.getElementById("blocksAccessedInfo");
       const blocksAccessedButton = document.getElementById(
         "blocksAccessedButton"
+      );
+      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
+      const blocksAccessedContent = document.getElementById(
+        "blocksAccessed-content"
       );
       blocksAccessedInfo.style.display = "none";
       blocksAccessedButton.style.display = "none";
       blocksAccessedDiv.style.display = "block";
       blocksAccessedContent.textContent = "Loading...";
+      // Check if there is a selected node
       if (clickedNodeData != null) {
+        // Concatenate table with secondary table if there is one to form FROM condition in query
         let table = clickedNodeData.table;
         if (clickedNodeData.secondary_table) {
           table += "," + clickedNodeData.secondary_table;
         }
+        // Fetch blocks accessed and number of tuples accessed within the block
         const response = await fetch("/query2", {
           method: "POST",
           headers: {
@@ -421,17 +426,19 @@ document
           }),
         });
 
+        // Display in a table, the blocks accessed and number of tuples accessed within the block
         if (response.ok) {
           let data = await response.json();
           if (data.error) {
             openModal("Error", JSON.stringify(data, undefined, 2));
           }
-
+          // Displays in a row of a table, block number followed by number of tuples accessed, with an option to view details with onclick function
           let tablerowscontent = data["blocks"].map((block) => {
             let tuples_count = data["blocks_and_tuples_count"][block];
             let tuples = data["blocks_and_tuples_dict"][block];
             return `<tr><td>${block}</td><td><span>${tuples_count}</span><span onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin-left: 4px;">(View details)</span></td></tr>`;
           });
+          // Display the table
           blocksAccessedContent.innerHTML =
             "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Number of Tuples Accessed</th></tr></thead><tbody>" +
             tablerowscontent.join("") +
@@ -446,13 +453,7 @@ document
     }
   });
 
-function showRemainingTuples(element, remainingTuples) {
-  element.textContent = remainingTuples;
-  element.style = null;
-  element.style.fontSize = "1em";
-  element.style.display = "inline";
-}
-
+// Fetch tuples accessed within the block
 async function fetchTuples(block, tuples, table) {
   const response = await fetch("/query3", {
     method: "POST",
@@ -467,25 +468,26 @@ async function fetchTuples(block, tuples, table) {
   });
   if (response.ok) {
     let data = await response.json();
-    // console.log("got data from query 3:", data);
     if (data.error) {
       openModal("Error", JSON.stringify(data, undefined, 2));
     }
     let tuplesCount = data["tuples"].length;
-    // display of tuples accessed
+    // Save the header to show indexes of tuples accessed in a variable
     let tuplesAccessed = `<div style="margin-bottom:30px" ><h5> ${
       tuplesCount > 1 ? "Indexes of Tuples Accessed" : "Index of Tuple Accessed"
     }</h5><div>${tuples}</div></div>`;
-    // table for top 5 tuples in block
+    // Save the content of each tuple in a table row for (up to) top 5 tuples in block in a variable
     let tableRows = data["tuples"]
       .map((tuple) => {
         let cells = tuple.map((item) => `<td>${item}</td>`).join("");
         return `<tr>${cells}</tr>`;
       })
       .join("");
+    // Save the headers of the table in a variable
     let tableHeaders = data["headers"]
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
+    // Display the table using the variables defined above
     let topTuplesData = `<div class="flex flex-col"><h5>${
       tuplesCount > 1 ? `First ${tuplesCount} Tuples` : "Tuple"
     } Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;

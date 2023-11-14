@@ -50,7 +50,6 @@ sqlForm.addEventListener("submit", async (e) => {
       blocksAccessedDiv.style.display = "none";
     } else {
       alert("sql query failed!");
-      // dhruval put your modal here
       openModal("Error", "Something went wrong! Please try again.");
     }
   } catch (error) {
