@@ -1,15 +1,21 @@
+
+
 import psycopg2
 from dotenv import load_dotenv
 import os
 from db_util import parse_explain, tree_representation, summary_representation
 
+
+# Load environment variables, otherwise use defaults
+if os.path.exists('.env'):
+    load_dotenv()
+
+
 TABLE_FOLDER = "./sql_setup/"
 TABLE_FILES = ["region.sql", "nation.sql", "part.sql", "supplier.sql", "partsupp.sql", "customer.sql", "order.sql", "lineitem.sql"]
-DATABASE_NAME = "tpc_h"
 
-# for use before the TCP-H db exists
-STARTING_DATABASE_NAME = "postgres"
 
+# Load Sample Queries for TESTING
 def load_queries():
     QUERY_FOLDER = './data/queries/'
     queries = []
@@ -21,6 +27,8 @@ def load_queries():
             queries.append(query)
     return queries
 
+
+# Database Object to interface with PostgreSQL db
 class Database:
     # Maintain singleton design pattern with static variable
     _instance_exists = False
@@ -49,7 +57,7 @@ class Database:
             port=self.db_port
         )
         connection.set_session(readonly=read_only, autocommit=True)
-        print("Connected to:", table_name);
+        print("Connected to:", table_name)
         self.connection = connection
 
     def execute(self, query, needs_output=True):
@@ -80,11 +88,9 @@ class Database:
         self.connection.close()
         self.connection = None
 
-
+    # Only to be run if tables do not exist
     def create_tables(self, base_db_name, new_db_name):
         self.connect(base_db_name, False)
-        
-        # self.execute(f"DROP DATABASE IF EXISTS {new_db_name};", False)
         self.execute(f"CREATE DATABASE {new_db_name};", False)
         self.execute("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user")
         print(f"Created database: {new_db_name}")
@@ -100,26 +106,26 @@ class Database:
         print("All tables created")
         self.close()
 
+# Ensure parsing works for a set of sample queries
+def run_tests(db):
+    try:
+        all_queries = load_queries()
+        for query in all_queries:
+            result = db.execute("EXPLAIN (analyse, buffers) " + query)
+            parsed_nodes = parse_explain(result)
+            tree_rep = tree_representation(parsed_nodes)
+            summary_rep = summary_representation(tree_rep)
+        return True
+    except Exception:
+        return False
+    
 
-
-
-
-
+# Run this file directly to test connection
 if __name__ == "__main__":
     print("Running db.py!")
-    all_queries = load_queries()
     db = Database()
-    db.connect('tpc_h')
-    for query in all_queries:
-        result = db.execute("EXPLAIN (analyse, buffers) " + query)
-        parsed_nodes = parse_explain(result)
-        tree_rep = tree_representation(parsed_nodes)
-        summary_rep = summary_representation(tree_rep)
-    for query in all_queries:
-        result = db.execute("EXPLAIN (analyse, buffers) " + query)
-        parsed_nodes = parse_explain(result)
-        tree_rep = tree_representation(parsed_nodes)
-        summary_rep = summary_representation(tree_rep)
+    db.connect(os.getenv('DATABASE_NAME', 'TPC-H'))
+    assert run_tests(db)
     db.close()
 
 

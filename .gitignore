@@ -5,8 +5,6 @@ TPC*/
 
 db_proj/*
 
-*.env*
-*/.env*
 
 */__pycache__/*
 /__pycache/*
