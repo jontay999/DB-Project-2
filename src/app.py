@@ -30,11 +30,14 @@ def test():
 def run_sql_query():
     try:
         sql_query = request.get_json().get('sql_query')
+
+        print("Got sql query:", sql_query)
         if sql_query:
             result = DATABASE.execute("EXPLAIN (analyse,buffers,costs off) " + sql_query, True)
             parsed_nodes = parse_explain(result)
-             
+            print("parsed nodes")
             tree_rep = tree_representation(parsed_nodes)
+            print("Tree rep")
             summary_rep = summary_representation(tree_rep)
             return jsonify({'result': tree_rep, 'summary': summary_rep, 'timing': timing_representation(result)})
         else:

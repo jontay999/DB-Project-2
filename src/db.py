@@ -1,7 +1,7 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
-from db_util import parse_explain
+from db_util import parse_explain, tree_representation, summary_representation
 
 TABLE_FOLDER = "./sql_setup/"
 TABLE_FILES = ["region.sql", "nation.sql", "part.sql", "supplier.sql", "partsupp.sql", "customer.sql", "order.sql", "lineitem.sql"]
@@ -113,6 +113,13 @@ if __name__ == "__main__":
     for query in all_queries:
         result = db.execute("EXPLAIN (analyse, buffers) " + query)
         parsed_nodes = parse_explain(result)
+        tree_rep = tree_representation(parsed_nodes)
+        summary_rep = summary_representation(tree_rep)
+    for query in all_queries:
+        result = db.execute("EXPLAIN (analyse, buffers) " + query)
+        parsed_nodes = parse_explain(result)
+        tree_rep = tree_representation(parsed_nodes)
+        summary_rep = summary_representation(tree_rep)
     db.close()
 
 
