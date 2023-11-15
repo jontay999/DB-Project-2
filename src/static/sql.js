@@ -50,4 +50,12 @@ sqlForm.addEventListener("submit", async (e) => {
   } catch (error) {
     console.error("err:", error);
   }
+  return false;
 });
+
+
+// setTimeout(() => {
+//   if (document.getElementById("overview_content").textContent.includes("Unavailable")) {
+//     sqlForm.submit();
+//   }
+// }, 5000)

@@ -255,10 +255,11 @@ function update(source) {
                 <span><b>${d.title}</b></span>
                 <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
               </div>
-              <div style='font-size:13px;color:grey'>
-                <span><b>Buffers: </b> ${d.buffer ? getBufferString(d.buffer) : "Unavailable"
-        }</span>
-              </div>
+              ${d.buffer ?
+          `<div style='font-size:13px;color:grey'>
+                <span><b>Buffers: </b> ${getBufferString(d.buffer)}</span>
+              </div>` : ""
+        }
             </div>
         `;
     });
