@@ -11,7 +11,7 @@ DATABASE = None
 app_data = {
     "name": "DB Project 2",
     "description": "A basic Flask app using bootstrap, for Query Execution plan Visualization",
-    "author": "Jon",
+    "author": "DB Group",
     "html_title": "DB Project",
     "project_name": "DB Project",
     "keywords": "",
@@ -35,9 +35,7 @@ def run_sql_query():
         if sql_query:
             result = DATABASE.execute("EXPLAIN (analyse,buffers,costs off) " + sql_query, True)
             parsed_nodes = parse_explain(result)
-            print("parsed nodes")
             tree_rep = tree_representation(parsed_nodes)
-            print("Tree rep")
             summary_rep = summary_representation(tree_rep)
             return jsonify({'result': tree_rep, 'summary': summary_rep, 'timing': timing_representation(result)})
         else:
