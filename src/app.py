@@ -52,18 +52,18 @@ def run_sql_query_block_info():
         table = data["table"]
         from_tables = data["from_tables"]
         where_condition = data["where_condition"]
-        if where_condition:
-            query = f"SELECT {table}.ctid FROM {from_tables} WHERE {where_condition} order by ctid;"
-        else:
-            query = f"SELECT {table}.ctid FROM {from_tables} order by ctid;"
-        print("query 2 is:", query)
+        query = f"SELECT {table}.ctid FROM {from_tables} {'WHERE ' + where_condition if where_condition else ''} order by ctid;"
         query_result = DATABASE.execute(query)
+        # initialise a dictionary with block id as key and set of tuple ids as values
         result = defaultdict(set)
         for x in query_result:
             block_id, tuple_id = x[0][1:-1].split(",")
-            result[block_id].add(tuple_id)
-        result = {key: sorted([int(x) for x in value]) for key, value in result.items()}
+            result[block_id].add(int(tuple_id))
+        # convert set to list and sort
+        result = {key: sorted(value) for key, value in result.items()}
+        # save all the blocks accessed ids in a list
         blocks = list(result.keys())
+        # save the count of tuples in each block
         blocks_and_tuples_count = {key: len(value) for key, value in result.items()}
         return jsonify({'blocks': blocks, 'blocks_and_tuples_dict': result, "blocks_and_tuples_count": blocks_and_tuples_count})
     except Exception as e:
@@ -72,19 +72,17 @@ def run_sql_query_block_info():
 @app.route("/query3", methods=['POST'])
 def run_sql_query_tuples_info():
     try:
+        # obtain data from the request
         data = request.get_json()
         table = data["table"]
         block_id = data["block_id"]
         tuples_id = data["tuples_id"]
         # gives the tuples in a block
         tuples_as_string = "(" + tuples_id + ")"
+        # query to get the content of the tuples accessed in a block
         query = f"SELECT ctid,* FROM {table} WHERE (ctid::text::point)[0]={block_id}  AND (ctid::text::point)[1] in {tuples_as_string}  order by ctid limit 5;"
         query_result, headers = DATABASE.execute_with_headers(query)
-        result = []
-        # gives the tuples that match the tuples accessed
-        for x in query_result:
-            result.append(x)
-        return jsonify({'tuples': result, 'headers': headers, "count": len(result)})
+        return jsonify({'tuples': query_result, 'headers': headers})
     except Exception as e:
         return jsonify({'error': str(e)})
     

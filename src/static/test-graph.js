@@ -1,9 +1,9 @@
 const margin = {
-  top: 20,
-  right: 120,
-  bottom: 20,
-  left: 120,
-},
+    top: 20,
+    right: 120,
+    bottom: 20,
+    left: 120,
+  },
   width = 960 - margin.right - margin.left,
   height = 800 - margin.top - margin.bottom;
 
@@ -178,7 +178,7 @@ d3.select("#zoom_out").on("click", function () {
 
 // function collapse(d) {
 //     if (d.children) {
-//         d._children = d.children;
+//         d._children = d.children;x
 //         d._children.forEach(collapse);
 //         d.children = null;
 //     }
@@ -199,11 +199,11 @@ function update_root(new_root) {
 d3.select("#body").style("height", "800px");
 
 function getBufferString(buffer_dict) {
-  arr = []
+  arr = [];
   for (let [key, value] of Object.entries(buffer_dict)) {
-    arr.push(`${key}: ${value}`)
+    arr.push(`${key}: ${value}`);
   }
-  return arr.join(', ')
+  return arr.join(", ");
 }
 
 function update(source) {
@@ -261,7 +261,7 @@ function update(source) {
     .append("xhtml:div")
     .style("height", "100%")
     .html(function (d) {
-      console.log('d info:', d)
+      console.log("d info:", d);
       // Create a custom HTML structure with two spans
       return `
             <div style='height:100%;width:100%;margin:auto;padding: 10px 15px;'>
@@ -270,7 +270,9 @@ function update(source) {
                 <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
               </div>
               <div style='font-size:13px;color:grey'>
-                <span><b>Buffers: </b> ${d.buffer ? getBufferString(d.buffer) : "Unavailable"}</span>
+                <span><b>Buffers: </b> ${
+                  d.buffer ? getBufferString(d.buffer) : "Unavailable"
+                }</span>
               </div>
             </div>
         `;
@@ -384,27 +386,32 @@ function redraw() {
 
 update_root(root);
 
+// Get blocks and tuples accessed when user clicks on the button
 document
   .getElementById("blocksAccessedButton")
   .addEventListener("click", async () => {
     try {
-      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
-      const blocksAccessedContent = document.getElementById(
-        "blocksAccessed-content"
-      );
+      // Open the blocks accessed div when button is clicked and show loading
       const blocksAccessedInfo = document.getElementById("blocksAccessedInfo");
       const blocksAccessedButton = document.getElementById(
         "blocksAccessedButton"
+      );
+      const blocksAccessedDiv = document.getElementById("blocksAccessedDiv");
+      const blocksAccessedContent = document.getElementById(
+        "blocksAccessed-content"
       );
       blocksAccessedInfo.style.display = "none";
       blocksAccessedButton.style.display = "none";
       blocksAccessedDiv.style.display = "block";
       blocksAccessedContent.textContent = "Loading...";
+      // Check if there is a selected node
       if (clickedNodeData != null) {
+        // Concatenate table with secondary table if there is one to form FROM condition in query
         let table = clickedNodeData.table;
         if (clickedNodeData.secondary_table) {
           table += "," + clickedNodeData.secondary_table;
         }
+        // Fetch blocks accessed and number of tuples accessed within the block
         const response = await fetch("/query2", {
           method: "POST",
           headers: {
@@ -419,34 +426,19 @@ document
           }),
         });
 
+        // Display in a table, the blocks accessed and number of tuples accessed within the block
         if (response.ok) {
           let data = await response.json();
           if (data.error) {
             openModal("Error", JSON.stringify(data, undefined, 2));
           }
-
+          // Displays in a row of a table, block number followed by number of tuples accessed, with an option to view details with onclick function
           let tablerowscontent = data["blocks"].map((block) => {
             let tuples_count = data["blocks_and_tuples_count"][block];
             let tuples = data["blocks_and_tuples_dict"][block];
             return `<tr><td>${block}</td><td><span>${tuples_count}</span><span onclick="fetchTuples('${block}', '${tuples}', '${clickedNodeData.table}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin-left: 4px;">(View details)</span></td></tr>`;
-            // let tuples = data["blocks_and_tuples_dict"][block];
-            //     let displayTuples =
-            //       tuples.length > 5 ? `${tuples.slice(0, 5)}` : tuples;
-            //     let remainingTuples = tuples.length > 5 ? tuples.slice(5) : "";
-            //     return `<tr>
-            //     <td>${block}</td>
-            //     <td>
-            //       <span onclick="fetchTuples('${block}', '${displayTuples}', '${
-            //       clickedNodeData.table
-            //     }')" style="color: blue; text-decoration: underline; cursor: pointer; display:inline;">${displayTuples}</span>
-            //       ${
-            //         tuples.length > 5
-            //           ? `<span onclick="showRemainingTuples(this, ',${remainingTuples}')" style="color: blue; text-decoration: underline; cursor: pointer; font-size: 0.8em;">more</span>`
-            //           : ""
-            //       }
-            //     </td>
-            //   </tr>`;
           });
+          // Display the table
           blocksAccessedContent.innerHTML =
             "<table class='table'><thead><tr><th scope='col'>Block #</th><th scope='col'>Number of Tuples Accessed</th></tr></thead><tbody>" +
             tablerowscontent.join("") +
@@ -461,13 +453,7 @@ document
     }
   });
 
-function showRemainingTuples(element, remainingTuples) {
-  element.textContent = remainingTuples;
-  element.style = null;
-  element.style.fontSize = "1em";
-  element.style.display = "inline";
-}
-
+// Fetch tuples accessed within the block
 async function fetchTuples(block, tuples, table) {
   const response = await fetch("/query3", {
     method: "POST",
@@ -482,24 +468,29 @@ async function fetchTuples(block, tuples, table) {
   });
   if (response.ok) {
     let data = await response.json();
-    // console.log("got data from query 3:", data);
     if (data.error) {
       openModal("Error", JSON.stringify(data, undefined, 2));
     }
-    // display of tuples accessed
-    let tuplesAccessed = `<div style="margin-bottom:30px" ><h5>Indexes of Tuples Accessed</h5><div>${tuples}</div></div>`;
-    // table for top 5 tuples in block
+    let tuplesCount = data["tuples"].length;
+    // Save the header to show indexes of tuples accessed in a variable
+    let tuplesAccessed = `<div style="margin-bottom:30px" ><h5> ${
+      tuplesCount > 1 ? "Indexes of Tuples Accessed" : "Index of Tuple Accessed"
+    }</h5><div>${tuples}</div></div>`;
+    // Save the content of each tuple in a table row for (up to) top 5 tuples in block in a variable
     let tableRows = data["tuples"]
       .map((tuple) => {
         let cells = tuple.map((item) => `<td>${item}</td>`).join("");
         return `<tr>${cells}</tr>`;
       })
       .join("");
-    const tuplesCount = data["count"];
+    // Save the headers of the table in a variable
     let tableHeaders = data["headers"]
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
-    let topTuplesData = `<div class="flex flex-col"><h5>First 5 Tuples Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
+    // Display the table using the variables defined above
+    let topTuplesData = `<div class="flex flex-col"><h5>${
+      tuplesCount > 1 ? `First ${tuplesCount} Tuples` : "Tuple"
+    } Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
     openModal(
       `Information on Tuples Accessed in Block ${block}`,
       tuplesAccessed + topTuplesData
