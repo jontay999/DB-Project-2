@@ -4,6 +4,12 @@ from flask import Flask, render_template, jsonify,request
 from db import Database
 from db_util import parse_explain, tree_representation, summary_representation, timing_representation
 from collections import defaultdict
+import os
+from dotenv import load_dotenv
+
+# Load environment variables, otherwise use defaults
+if os.path.exists('.env'):
+    load_dotenv()
 
 DEVELOPMENT_ENV = True
 app = Flask(__name__)
@@ -89,6 +95,6 @@ def run_sql_query_tuples_info():
 
 if __name__ == "__main__":
     DATABASE = Database()
-    DATABASE.connect('tpc_h')
+    DATABASE.connect(os.getenv('DATABASE_NAME', 'TPC-H'))
     app.run(port=8000,debug=DEVELOPMENT_ENV)
     DATABASE.close()
