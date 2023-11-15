@@ -1,9 +1,9 @@
 const margin = {
-    top: 20,
-    right: 120,
-    bottom: 20,
-    left: 120,
-  },
+  top: 20,
+  right: 120,
+  bottom: 20,
+  left: 120,
+},
   width = 960 - margin.right - margin.left,
   height = 800 - margin.top - margin.bottom;
 
@@ -176,21 +176,8 @@ d3.select("#zoom_out").on("click", function () {
   zm.event(svg);
 });
 
-// function collapse(d) {
-//     if (d.children) {
-//         d._children = d.children;x
-//         d._children.forEach(collapse);
-//         d.children = null;
-//     }
-// }
-
 function update_root(new_root) {
-  console.log("my root:", new_root);
   root = new_root;
-
-  // only put this when you want things to start out collapsed
-  // root.children.forEach(collapse);
-
   root.x0 = 0;
   root.y0 = height / 2;
   update(root);
@@ -261,8 +248,7 @@ function update(source) {
     .append("xhtml:div")
     .style("height", "100%")
     .html(function (d) {
-      console.log("d info:", d);
-      // Create a custom HTML structure with two spans
+      // Create a custom HTML structure for each node
       return `
             <div style='height:100%;width:100%;margin:auto;padding: 10px 15px;'>
               <div style='display:flex;justify-content:space-between;'>    
@@ -270,9 +256,8 @@ function update(source) {
                 <span style='color:#afafaf'>#${parseInt(d.id) + 1}</span>
               </div>
               <div style='font-size:13px;color:grey'>
-                <span><b>Buffers: </b> ${
-                  d.buffer ? getBufferString(d.buffer) : "Unavailable"
-                }</span>
+                <span><b>Buffers: </b> ${d.buffer ? getBufferString(d.buffer) : "Unavailable"
+        }</span>
               </div>
             </div>
         `;
@@ -473,9 +458,8 @@ async function fetchTuples(block, tuples, table) {
     }
     let tuplesCount = data["tuples"].length;
     // Save the header to show indexes of tuples accessed in a variable
-    let tuplesAccessed = `<div style="margin-bottom:30px" ><h5> ${
-      tuplesCount > 1 ? "Indexes of Tuples Accessed" : "Index of Tuple Accessed"
-    }</h5><div>${tuples}</div></div>`;
+    let tuplesAccessed = `<div style="margin-bottom:30px" ><h5> ${tuplesCount > 1 ? "Indexes of Tuples Accessed" : "Index of Tuple Accessed"
+      }</h5><div>${tuples}</div></div>`;
     // Save the content of each tuple in a table row for (up to) top 5 tuples in block in a variable
     let tableRows = data["tuples"]
       .map((tuple) => {
@@ -488,9 +472,8 @@ async function fetchTuples(block, tuples, table) {
       .map((header) => `<th scope="col">${header}</th>`)
       .join("");
     // Display the table using the variables defined above
-    let topTuplesData = `<div class="flex flex-col"><h5>${
-      tuplesCount > 1 ? `First ${tuplesCount} Tuples` : "Tuple"
-    } Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
+    let topTuplesData = `<div class="flex flex-col"><h5>${tuplesCount > 1 ? `First ${tuplesCount} Tuples` : "Tuple"
+      } Accessed</h5><table class="table"><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}<tbody></table><div>`;
     openModal(
       `Information on Tuples Accessed in Block ${block}`,
       tuplesAccessed + topTuplesData

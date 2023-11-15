@@ -21,11 +21,6 @@ sqlForm.addEventListener("submit", async (e) => {
         openModal("Error", JSON.stringify(data, undefined, 2));
       }
 
-      console.log("got data:", data);
-
-      // for debugging
-      // document.getElementById("queryOutput").textContent = JSON.stringify(data, undefined, 2);
-
       update_root(data["result"]);
 
       // update summary box
