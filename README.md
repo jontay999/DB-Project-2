@@ -1,95 +1,33 @@
-# DB-Project-2
+# Usage Guide - Windows [psycopg2]
 
-## Source files `/src/`
+## Setting up the Environment & Running the GUI Application
 
-- `explore.py`: contains the code for facilitating the exploration
-- `interface.py`: GUI Code
-- `project.py`: main file that invokes all the necessary procedure
-
-## Quick Start:
-
-```bash
-pip3 install -r requirements.txt
-cd src/
-python3 project.py
-```
-
-### Architecture
-
-- Web Server: Flask
-- Frontend Framework: HTML/CSS/JS
-- Database: Postgres
-
-## Python Setup
-
-- To ensure no versioning issues, we use a python virtual environment
+1. Clone the git repo. <br/>
+   `git clone https://github.com/jontay999/DB-Project-2.git`
+2. Open a new terminal and cd into the cloned repository.
+3. Start virtual environment. <br/>
+   `python3 -m pip install virtualenv` <br/>
+   `virtualenv db_proj` <br/>
+   `./db_proj/bin/activate`
+4. Install all python libraries used in our project.<br/>
+   `python3 -m pip install -r requirements.txt`
+5. Pip install psycopg2, if pip install failed for psycopg2, proceed to Annex B (in our report).<br/>
+   `python3 -m pip install -r psycopg2`
+6. If PostgreSQL, pgAdmin4 and the TPC-H database have NOT been set up, continue to step 7. If they have been set up, skip to step 10.
+7. Install PostgreSQL from the website (version 14.10).
+8. Open pgAdmin4 and ensure the server is running.
+9. Ensure the database TPC-H is set up and populated with data. (refer to annex A in project description).
+10. Open the .env file which is saved at /src/directory and update the components according to your required configuration.
 
 ```bash
-python3 -m install virtualenv
-virtualenv db_proj
-source /db_proj/bin/activate
-
-pip install -r requirements.txt
+DB_USER=postgres
+DB_PASSWORD=db_password
+DB_HOST=localhost
+DB_PORT=5432
+DATABASE_NAME=TPC_H
 ```
 
-### More setup instructions
-
-#### MAC OSX (sry grace you settle windows yourself)
-
-Install Postgres
-
-```bash
-# INSTALL POSTGRES
-brew install postgresql
-
-# Verify Installation
-psql --version
-
-# TO BEGIN
-brew services start postgresql
-
-# to begin interactive session
-psql postgres
-
-# TO END
-brew services stop postgresql
-```
-
-```sql
--- SET UP YOUR USER AND PASSWORD
-CREATE ROLE postgres WITH LOGIN PASSWORD 'db_password';
-ALTER ROLE postgres CREATEDB;
-
--- To view users and privileges, RUN THIS
-\du
-```
-
-If you prefer web-based GUI, can download [pgAdmin4](https://www.pgadmin.org/) and login with
-
-```
-host – 'localhost'
-user – '<your-db-user>'
-password – '<your-db-pw>'
-maintenance database – 'postgres'
-```
-
-### Data Generation (MacOS)
-
-1. Follow setup instructions [here](https://github.com/gregrahn/tpch-kit/blob/master/README.md)
-2. `cd` into the `dbgen` folder and run `./dbgen` (make sure you specify your environment variable of output folder)
-3. (You don't have to remove trailing delimiters as this is done already)
-4. Run `ls | sed 's/^\(.*\)\.tbl$/mv "\1.tbl" "\1.csv"/' | sh` to rename all the `.tbl` to `.csv`
-
-With regard to actually loading in the data, I wanted to explore these various optimization techniques, but I think the most convenient is just to use `pgAdmin4`. If you want to try to script it, you can take a look at [https://hakibenita.com/fast-load-data-python-postgresql](https://hakibenita.com/fast-load-data-python-postgresql)
-
-### Things to take note of
-
-- `postgres` only allows LOWERCASE table names
-
-Handy cheatsheet of postgres commands
-
-- `\l` : show all databases
-- `\dt`: show all tables
-- `\du`: show all users
-- `\password`: change password
-- `psql postgres -U <user>`: login as specific user (bash)
+11. Save the `.env` file and run the project.py file.
+    `python3 project.py`
+12. Open the resultant IP address in a browser.
+    `http://127.0.0.1:8000`
