@@ -37,7 +37,10 @@ sqlForm.addEventListener("submit", async (e) => {
       const nodeInfoPlaceholder = document.getElementById(
         "nodeInfo_placeholder"
       );
+      const placeholder_text = `Please click on a node from the Query Execution Plan on the right to view its node content!`
       nodeInfoDiv.style.display = "none";
+
+      nodeInfoPlaceholder.textContent = placeholder_text;
       nodeInfoPlaceholder.style.display = "block";
 
       // update blocks accessed block

@@ -141,6 +141,8 @@ let root = {
   width: 44,
 };
 
+root = {}
+
 let clickedNodeData = null;
 
 const duration = 750,
@@ -370,7 +372,7 @@ function redraw() {
   );
 }
 
-update_root(root);
+// update_root(root);
 
 // Get blocks and tuples accessed when user clicks on the button
 document
